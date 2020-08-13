@@ -6,6 +6,6 @@ import javafx.stage.Stage
 class MainApp : Application() {
 
     override fun start(primaryStage: Stage?) {
-        GameStage.launch(primaryStage)
+
     }
 }
