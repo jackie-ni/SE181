@@ -1,4 +1,4 @@
-package test.edu.se181;
+package edu.se181;
 
 import edu.se181.King;
 import edu.se181.Piece;
