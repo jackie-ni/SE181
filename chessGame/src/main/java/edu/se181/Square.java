@@ -12,7 +12,7 @@ public class Square {
     }
 
     public boolean isWhite() {
-        return (rank + file % 2) == 0;
+        return (rank + file) % 2 == 0;
     }
 
     public Piece getOccupant() {

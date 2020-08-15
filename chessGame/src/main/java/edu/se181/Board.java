@@ -28,7 +28,7 @@ public class Board {
         playingWhite = true;
     }
 
-    private void invertBoard() {
+    public void invertBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 squares[i][j].setRank(i);
@@ -141,19 +141,22 @@ public class Board {
         int newFile = piece.getFile() + fileOffset;
         if (newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7)
             return null;
-        return squares[newRank][newFile];
+        if (playingWhite)
+            return squares[7 - newRank][newFile];
+        else
+            return squares[newRank][7 - newFile];
     }
 
     public Square getSquareByNotation(String notation) {
         char rankChar = notation.charAt(1);
         char fileChar = notation.charAt(0);
-        int rank = (int) rankChar - 96;
-        int file = (int) fileChar - 49;
+        int rank = (int) rankChar - 49;
+        int file = (int) fileChar - 97;
         Square ret;
         if (playingWhite)
-            ret = squares[8 - rank][file];
+            ret = squares[7 - rank][file];
         else
-            ret = squares[rank][8 - file];
+            ret = squares[rank][7 - file];
         return ret;
     }
 
@@ -165,7 +168,7 @@ public class Board {
     // e - 1 if black can castle kingside, 0 otherwise
     // f - 1 if black can castle queenside, 0 otherwise
     // pppp... - 0 if no piece occupant, PNBRQK if white pawn, knight, etc, pnbrqk if black pawn, knight, etc
-    // pppp... - indicates piece at a8, b8, ... h8, a7, b7, ..., h1 (top left to bottom right by row)
+    // pppp... - indicates piece at a8, b8, ... h8, a7, b7, ..., h1 (top left to bottom right by row when white)
     public void loadBoard(String str) {
         reset();
         String meta = str.substring(0, 7);
@@ -179,8 +182,8 @@ public class Board {
             char p = pieces.charAt(i);
             if (p == '0')
                 continue;
-            int rank = playingWhite ? 7 - (i / 8) : i / 8;
-            int file = playingWhite ? i % 8 : 7 - (i % 8);
+            int rank = 7 - (i / 8);
+            int file = i % 8;
             Piece newPiece;
             if (p == 'P') {
                 newPiece = new Pawn(rank, file, true);
@@ -214,7 +217,10 @@ public class Board {
                 whitePieces.add(newPiece);
             else
                 blackPieces.add(newPiece);
-            squares[rank][file].setOccupant(newPiece);
+            if (playingWhite)
+                squares[7 - rank][file].setOccupant(newPiece);
+            else
+                squares[rank][7 - file].setOccupant(newPiece);
         }
 
         // en passant pawn
@@ -224,6 +230,8 @@ public class Board {
                 pawn.setEnPassantable(true);
             } catch (ClassCastException e) {
                 System.out.println("The piece on square " + meta.substring(1, 3) + " was not a pawn. Skipping en passantable...");
+            } catch (NullPointerException e) {
+                System.out.println("There is no piece on square " + meta.substring(1, 3) + " but it should be a pawn. Skipping en passantable...");
             }
         }
 
@@ -269,14 +277,15 @@ public class Board {
         boolean foundEP = false;
         for (Piece p : whitePieces) {
             if (p instanceof Pawn && ((Pawn) p).isEnPassantable()) {
-                ret += (char) (p.getFile() + 49) + (char) (p.getRank() + 96);
+                ret += (char) (p.getFile() + 97) + (char) (p.getRank() + 49);
                 foundEP = true;
                 break;
             }
         }
         for (Piece p : blackPieces) {
             if (!foundEP && p instanceof Pawn && ((Pawn) p).isEnPassantable()) {
-                ret += (char) (p.getFile() + 49) + (char) (p.getRank() + 96);
+                ret += ((char) (p.getFile() + 97));
+                ret += ((char) (p.getRank() + 49));
                 foundEP = true;
                 break;
             }
@@ -315,64 +324,64 @@ public class Board {
             ret += "0";
 
         if (playingWhite) {
-            for (int i = 7; i >= 0; i--) {
+            for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     Piece piece = squares[i][j].getOccupant();
-                    if (piece instanceof Pawn && p.isWhite())
+                    if (piece instanceof Pawn && piece.isWhite())
                         ret += "P";
-                    else if (piece instanceof Knight && p.isWhite())
+                    else if (piece instanceof Knight && piece.isWhite())
                         ret += "N";
-                    else if (piece instanceof Bishop && p.isWhite())
+                    else if (piece instanceof Bishop && piece.isWhite())
                         ret += "B";
-                    else if (piece instanceof Rook && p.isWhite())
+                    else if (piece instanceof Rook && piece.isWhite())
                         ret += "R";
-                    else if (piece instanceof Queen && p.isWhite())
+                    else if (piece instanceof Queen && piece.isWhite())
                         ret += "Q";
-                    else if (piece instanceof King && p.isWhite())
+                    else if (piece instanceof King && piece.isWhite())
                         ret += "K";
-                    else if (piece instanceof Pawn && !p.isWhite())
+                    else if (piece instanceof Pawn && !piece.isWhite())
                         ret += "p";
-                    else if (piece instanceof Knight && !p.isWhite())
+                    else if (piece instanceof Knight && !piece.isWhite())
                         ret += "n";
-                    else if (piece instanceof Bishop && !p.isWhite())
+                    else if (piece instanceof Bishop && !piece.isWhite())
                         ret += "b";
-                    else if (piece instanceof Rook && !p.isWhite())
+                    else if (piece instanceof Rook && !piece.isWhite())
                         ret += "r";
-                    else if (piece instanceof Queen && !p.isWhite())
+                    else if (piece instanceof Queen && !piece.isWhite())
                         ret += "q";
-                    else if (piece instanceof King && !p.isWhite())
+                    else if (piece instanceof King && !piece.isWhite())
                         ret += "k";
                     else
                         ret += "0";
                 }
             }
         } else {
-            for (int i = 0; i < 8; i++) {
+            for (int i = 7; i >= 0; i--) {
                 for (int j = 7; j >= 0; j--) {
                     Piece piece = squares[i][j].getOccupant();
-                    if (piece instanceof Pawn && p.isWhite())
+                    if (piece instanceof Pawn && piece.isWhite())
                         ret += "P";
-                    else if (piece instanceof Knight && p.isWhite())
+                    else if (piece instanceof Knight && piece.isWhite())
                         ret += "N";
-                    else if (piece instanceof Bishop && p.isWhite())
+                    else if (piece instanceof Bishop && piece.isWhite())
                         ret += "B";
-                    else if (piece instanceof Rook && p.isWhite())
+                    else if (piece instanceof Rook && piece.isWhite())
                         ret += "R";
-                    else if (piece instanceof Queen && p.isWhite())
+                    else if (piece instanceof Queen && piece.isWhite())
                         ret += "Q";
-                    else if (piece instanceof King && p.isWhite())
+                    else if (piece instanceof King && piece.isWhite())
                         ret += "K";
-                    else if (piece instanceof Pawn && !p.isWhite())
+                    else if (piece instanceof Pawn && !piece.isWhite())
                         ret += "p";
-                    else if (piece instanceof Knight && !p.isWhite())
+                    else if (piece instanceof Knight && !piece.isWhite())
                         ret += "n";
-                    else if (piece instanceof Bishop && !p.isWhite())
+                    else if (piece instanceof Bishop && !piece.isWhite())
                         ret += "b";
-                    else if (piece instanceof Rook && !p.isWhite())
+                    else if (piece instanceof Rook && !piece.isWhite())
                         ret += "r";
-                    else if (piece instanceof Queen && !p.isWhite())
+                    else if (piece instanceof Queen && !piece.isWhite())
                         ret += "q";
-                    else if (piece instanceof King && !p.isWhite())
+                    else if (piece instanceof King && !piece.isWhite())
                         ret += "k";
                     else
                         ret += "0";
