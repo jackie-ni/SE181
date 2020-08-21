@@ -1,31 +1,47 @@
 package edu.se181;
 
+import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.stage.StageStyle;
 
+import java.io.File;
+
+//Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
     private static final String CHESS_GAME = "Chess Game";
+
     public static void launch(Stage stage) {
         stage.setTitle(CHESS_GAME);
 
-        GridPane chessBoard = new GridPane();
+        BorderPane layout = new BorderPane();
+        GridPane chessBoard = Chessboard.createChessBoard();
 
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                Rectangle square = new Rectangle(50, 50);
+        chessBoard.setGridLinesVisible(true);
+        HBox top = new HBox();
+        HBox bottom = new HBox();
+        VBox left = new VBox();
+        VBox right = new VBox();
 
-                Color color = Color.GRAY;
-                if ((row + col) % 2 == 0) {
-                    color = Color.BEIGE;
-                }
-                square.setFill(color);
-                chessBoard.add(square, col, row);
-            }
-        }
-        Scene scene = new Scene(chessBoard, 500, 500);
+        left.setPrefHeight(600);
+        left.setPrefWidth(100);
+        right.setPrefHeight(600);
+        right.setPrefWidth(100);
+        top.setPrefHeight(100);
+        top.setPrefWidth(600);
+        bottom.setPrefHeight(100);
+        bottom.setPrefWidth(600);
+
+        layout.setCenter(chessBoard);
+        layout.setTop(top);
+        layout.setBottom(bottom);
+        layout.setLeft(left);
+        layout.setRight(right);
+
+        Scene scene = new Scene(layout, 600, 600);
         stage.setScene(scene);
         stage.show();
     }
