@@ -25,7 +25,6 @@
     <HBox styleClass="buttonBox"
           GridPane.rowIndex="20">
         <Button text="Version"
-                style="-fx-font-size: 16px;"
                 onAction="#versionButtonAction"/>
     </HBox>
 

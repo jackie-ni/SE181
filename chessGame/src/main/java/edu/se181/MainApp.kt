@@ -1,7 +1,7 @@
 package edu.se181
 
-import edu.se181.ReusedStrings.CHESS
-import edu.se181.ReusedStrings.SPLASH_SCREEN_PATH
+import edu.se181.StringSources.CHESS
+import edu.se181.StringSources.SPLASH_SCREEN_PATH
 import javafx.application.Application
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent

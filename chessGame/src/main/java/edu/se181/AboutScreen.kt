@@ -1,6 +1,6 @@
 package edu.se181
 
-import edu.se181.ReusedStrings.MAIN_MENU_SCREEN_PATH
+import edu.se181.StringSources.MAIN_MENU_SCREEN_PATH
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
