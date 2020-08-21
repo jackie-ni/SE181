@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="edu.se181.AboutScreen"
+          prefHeight="400.0" prefWidth="600.0"
+          styleClass="root"
+          alignment="TOP_CENTER">
+
+    <padding>
+        <Insets top="15" right="25" bottom="10" left="25"/>
+    </padding>
+
+    <Text fx:id="screenTitle"
+          text="Chess"
+          GridPane.rowIndex="0"/>
+
+    <HBox styleClass="buttonBox"
+          GridPane.rowIndex="20">
+        <Button text="Version"
+                onAction="#versionButtonAction"/>
+    </HBox>
+
+    <HBox styleClass="buttonBox"
+          GridPane.rowIndex="30">
+        <Button text="Credits"
+                onAction="#creditsButtonAction"/>
+    </HBox>
+
+    <HBox styleClass="buttonBox"
+          GridPane.rowIndex="40">
+        <Button text="Back"
+                onAction="#backButtonAction"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@/css/mainStyle.css"/>
+    </stylesheets>
+
+</GridPane>
