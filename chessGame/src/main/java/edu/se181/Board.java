@@ -15,12 +15,12 @@ public class Board {
 
     private void reset() {
         squares = new Square[8][8];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int row = 0; row < 8; row++) {
+            for (int file = 0; file < 8; file++) {
                 // a8 ... h8
                 // ...    ...
                 // a1 ... h1
-                squares[i][j] = new Square(7 - i, j, null);
+                squares[row][file] = new Square(7 - row, file, null);
             }
         }
         whitePieces = new ArrayList<>();
@@ -29,10 +29,10 @@ public class Board {
     }
 
     public void invertBoard() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                squares[i][j].setRank(i);
-                squares[i][j].setFile(7 - j);
+        for (int rank = 0; rank < 8; rank++) {
+            for (int col = 0; col < 8; col++) {
+                squares[rank][col].setRank(rank);
+                squares[rank][col].setFile(7 - col);
             }
         }
     }
@@ -96,25 +96,25 @@ public class Board {
         squares[6][7].setOccupant(new Pawn(squares[6][7].getRank(), squares[6][7].getFile(), white));
 
         if (white) {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    blackPieces.add(squares[i][j].getOccupant());
+            for (int row = 0; row < 2; row++) {
+                for (int file = 0; file < 8; file++) {
+                    blackPieces.add(squares[row][file].getOccupant());
                 }
             }
-            for (int i = 6; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    whitePieces.add(squares[i][j].getOccupant());
+            for (int row = 6; row < 8; row++) {
+                for (int file = 0; file < 8; file++) {
+                    whitePieces.add(squares[row][file].getOccupant());
                 }
             }
         } else {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 8; j++) {
-                    whitePieces.add(squares[i][j].getOccupant());
+            for (int row = 0; row < 2; row++) {
+                for (int file = 0; file < 8; file++) {
+                    whitePieces.add(squares[row][file].getOccupant());
                 }
             }
-            for (int i = 6; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    blackPieces.add(squares[i][j].getOccupant());
+            for (int row = 6; row < 8; row++) {
+                for (int file = 0; file < 8; file++) {
+                    blackPieces.add(squares[row][file].getOccupant());
                 }
             }
         }
@@ -178,42 +178,44 @@ public class Board {
             playingWhite = false;
         }
 
+        // i indicates the square on the board consistent with standard reading when playing white
+        // that is a8, b8, ... h8, a7, b7, ..., h1
         for (int i = 0; i < 64; i++) {
-            char p = pieces.charAt(i);
-            if (p == '0')
+            char pieceChar = pieces.charAt(i);
+            if (pieceChar == '0')
                 continue;
             int rank = 7 - (i / 8);
             int file = i % 8;
             Piece newPiece;
-            if (p == 'P') {
+            if (pieceChar == 'P') {
                 newPiece = new Pawn(rank, file, true);
-            } else if (p == 'N') {
+            } else if (pieceChar == 'N') {
                 newPiece = new Knight(rank, file, true);
-            } else if (p == 'B') {
+            } else if (pieceChar == 'B') {
                 newPiece = new Bishop(rank, file, true);
-            } else if (p == 'R') {
+            } else if (pieceChar == 'R') {
                 newPiece = new Rook(rank, file, true);
-            } else if (p == 'Q') {
+            } else if (pieceChar == 'Q') {
                 newPiece = new Queen(rank, file, true);
-            } else if (p == 'K') {
+            } else if (pieceChar == 'K') {
                 newPiece = new King(rank, file, true);
-            } else if (p == 'p') {
+            } else if (pieceChar == 'p') {
                 newPiece = new Pawn(rank, file, false);
-            } else if (p == 'n') {
+            } else if (pieceChar == 'n') {
                 newPiece = new Knight(rank, file, false);
-            } else if (p == 'b') {
+            } else if (pieceChar == 'b') {
                 newPiece = new Bishop(rank, file, false);
-            } else if (p == 'r') {
+            } else if (pieceChar == 'r') {
                 newPiece = new Rook(rank, file, false);
-            } else if (p == 'q') {
+            } else if (pieceChar == 'q') {
                 newPiece = new Queen(rank, file, false);
-            } else if (p == 'k') {
+            } else if (pieceChar == 'k') {
                 newPiece = new King(rank, file, false);
             } else {
-                System.out.println("Invalid character, " + p + ", in board string. Skipping...");
+                System.out.println("Invalid character, " + pieceChar + ", in board string. Skipping...");
                 continue;
             }
-            if (p < 97)
+            if (pieceChar < 97)
                 whitePieces.add(newPiece);
             else
                 blackPieces.add(newPiece);
@@ -265,7 +267,6 @@ public class Board {
         }
     }
 
-    //
     public String toBoardState() {
         String ret = "";
         if (playingWhite)
@@ -275,17 +276,18 @@ public class Board {
 
         // en passant
         boolean foundEP = false;
-        for (Piece p : whitePieces) {
-            if (p instanceof Pawn && ((Pawn) p).isEnPassantable()) {
-                ret += (char) (p.getFile() + 97) + (char) (p.getRank() + 49);
+        for (Piece piece : whitePieces) {
+            if (piece instanceof Pawn && ((Pawn) piece).isEnPassantable()) {
+                ret += (char) (piece.getFile() + 97);
+                ret += (char) (piece.getRank() + 49);
                 foundEP = true;
                 break;
             }
         }
-        for (Piece p : blackPieces) {
-            if (!foundEP && p instanceof Pawn && ((Pawn) p).isEnPassantable()) {
-                ret += ((char) (p.getFile() + 97));
-                ret += ((char) (p.getRank() + 49));
+        for (Piece piece : blackPieces) {
+            if (!foundEP && piece instanceof Pawn && ((Pawn) piece).isEnPassantable()) {
+                ret += (char) (piece.getFile() + 97);
+                ret += (char) (piece.getRank() + 49);
                 foundEP = true;
                 break;
             }
@@ -294,39 +296,39 @@ public class Board {
             ret += "00";
 
         // white kingside castle
-        Piece k = getSquareByNotation("e1").getOccupant();
-        Piece p = getSquareByNotation("h1").getOccupant();
-        if (p instanceof Rook && !p.hasMoved() && k instanceof King && !k.hasMoved())
+        Piece king = getSquareByNotation("e1").getOccupant();
+        Piece rook = getSquareByNotation("h1").getOccupant();
+        if (rook instanceof Rook && !rook.hasMoved() && king instanceof King && !king.hasMoved())
             ret += "1";
         else
             ret += "0";
 
         // white queenside castle
-        p = getSquareByNotation("a1").getOccupant();
-        if (p instanceof Rook && !p.hasMoved() && k instanceof King && !k.hasMoved())
+        rook = getSquareByNotation("a1").getOccupant();
+        if (rook instanceof Rook && !rook.hasMoved() && king instanceof King && !king.hasMoved())
             ret += "1";
         else
             ret += "0";
 
         // black kingside castle
-        k = getSquareByNotation("e8").getOccupant();
-        p = getSquareByNotation("h8").getOccupant();
-        if (p instanceof Rook && !p.hasMoved() && k instanceof King && !k.hasMoved())
+        king = getSquareByNotation("e8").getOccupant();
+        rook = getSquareByNotation("h8").getOccupant();
+        if (rook instanceof Rook && !rook.hasMoved() && king instanceof King && !king.hasMoved())
             ret += "1";
         else
             ret += "0";
 
         // black queenside castle
-        p = getSquareByNotation("a8").getOccupant();
-        if (p instanceof Rook && !p.hasMoved() && k instanceof King && !k.hasMoved())
+        rook = getSquareByNotation("a8").getOccupant();
+        if (rook instanceof Rook && !rook.hasMoved() && king instanceof King && !king.hasMoved())
             ret += "1";
         else
             ret += "0";
 
         if (playingWhite) {
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    Piece piece = squares[i][j].getOccupant();
+            for (int row = 0; row < 8; row++) {
+                for (int file = 0; file < 8; file++) {
+                    Piece piece = squares[row][file].getOccupant();
                     if (piece instanceof Pawn && piece.isWhite())
                         ret += "P";
                     else if (piece instanceof Knight && piece.isWhite())
@@ -356,9 +358,9 @@ public class Board {
                 }
             }
         } else {
-            for (int i = 7; i >= 0; i--) {
-                for (int j = 7; j >= 0; j--) {
-                    Piece piece = squares[i][j].getOccupant();
+            for (int row = 7; row >= 0; row--) {
+                for (int file = 7; file >= 0; file--) {
+                    Piece piece = squares[row][file].getOccupant();
                     if (piece instanceof Pawn && piece.isWhite())
                         ret += "P";
                     else if (piece instanceof Knight && piece.isWhite())
