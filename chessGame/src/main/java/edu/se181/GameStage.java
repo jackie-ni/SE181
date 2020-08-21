@@ -1,6 +1,8 @@
 package edu.se181;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -22,7 +24,7 @@ public class GameStage {
 
         chessBoard.setGridLinesVisible(true);
         HBox top = new HBox();
-        HBox bottom = new HBox();
+        HBox bottom = new HBox(20);
         VBox left = new VBox();
         VBox right = new VBox();
 
@@ -40,6 +42,12 @@ public class GameStage {
         layout.setBottom(bottom);
         layout.setLeft(left);
         layout.setRight(right);
+
+        //TODO: Implement Surrender/Draw button functions
+        Button surrender = new Button("Surrender");
+        Button draw = new Button("Draw");
+        bottom.setAlignment(Pos.CENTER);
+        bottom.getChildren().addAll(surrender,draw);
 
         Scene scene = new Scene(layout, 600, 600);
         stage.setScene(scene);
