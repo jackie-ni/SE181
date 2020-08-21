@@ -1,16 +1,10 @@
 package edu.se181;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.stage.StageStyle;
-
-import java.io.File;
 
 //Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
@@ -47,7 +41,7 @@ public class GameStage {
         Button surrender = new Button("Surrender");
         Button draw = new Button("Draw");
         bottom.setAlignment(Pos.CENTER);
-        bottom.getChildren().addAll(surrender,draw);
+        bottom.getChildren().addAll(surrender, draw);
 
         Scene scene = new Scene(layout, 600, 600);
         stage.setScene(scene);
