@@ -48,7 +48,7 @@ public class Game {
     }
 
     public List<Move> getLegalMoves(int rank, int file) {
-        Piece mover = board.getSquareByRankFile(rank, file).getOccupant();
+        //Piece mover = board.getSquareByRankFile(rank, file).getOccupant();
         //return logicUnit.getLegalMoves(mover);
         return null; // switch out when we merge GameLogic legal moves
     }
