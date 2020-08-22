@@ -8,4 +8,15 @@ object StringSources {
 
     //UI Strings
     val CHESS = "Chess"
+    val CREDITS_DIALOG = "Credits"
+    val CREDITS = "Jackie Ni\n" +
+            "Torin Rittenhouse\n" +
+            "Tommy Santangelo\n" +
+            "Javion Smith-Sanders\n" +
+            "Samuel Tate\n" +
+            "Tim Tran"
+    private val VERSION_NUMBER = "0.0"
+    val VERSION = "Version: $VERSION_NUMBER"
+    val VERSION_DIALOG = "Version Info"
+
 }
