@@ -4,11 +4,13 @@ public abstract class Move {
 	private Piece piece;
 	private int rankDest;
 	private int fileDest;
+	private boolean isCapture;
 
 	public Move(Piece piece, int rankDest, int fileDest, boolean isCapture){
 		this.piece = piece;
 		this.rankDest = rankDest;
 		this.fileDest = fileDest;
+		this.isCapture = isCapture;
 	}
 
 	public Piece getPiece() {
@@ -21,5 +23,9 @@ public abstract class Move {
 
 	public int getFileDest() {
 		return fileDest;
+	}
+
+	public boolean isCapture(){
+		return isCapture;
 	}
 }
