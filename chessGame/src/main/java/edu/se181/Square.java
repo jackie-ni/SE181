@@ -21,6 +21,10 @@ public class Square {
 
     public void setOccupant(Piece p) {
         occupant = p;
+        if (p != null) {
+            occupant.setRank(this.rank);
+            occupant.setFile(this.file);
+        }
     }
 
     public int getRank() {

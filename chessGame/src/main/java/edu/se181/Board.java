@@ -107,9 +107,6 @@ public class Board {
             //feels awkward that we still need to change piece position
         }
         else if (move instanceof CastleMove){
-            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
-            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
-
             Piece rook;
             if (((CastleMove) move).isKingSide){
                 rook = squares[7-piece.getRank()][7].getOccupant();
@@ -120,6 +117,9 @@ public class Board {
                 squares[7-piece.getRank()][0].setOccupant(null);
                 squares[7-piece.getRank()][piece.getFile()-1].setOccupant(rook);
             }
+
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
         }
         else if (move instanceof PromoteMove){
             Piece promotedPiece = ((PromoteMove) move).promotePiece;
