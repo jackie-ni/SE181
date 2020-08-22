@@ -189,6 +189,8 @@ public class Board {
             Piece newPiece;
             if (pieceChar == 'P') {
                 newPiece = new Pawn(rank, file, true);
+                if (rank != 1)
+                    newPiece.firstMovePerformed();
             } else if (pieceChar == 'N') {
                 newPiece = new Knight(rank, file, true);
             } else if (pieceChar == 'B') {
@@ -201,6 +203,8 @@ public class Board {
                 newPiece = new King(rank, file, true);
             } else if (pieceChar == 'p') {
                 newPiece = new Pawn(rank, file, false);
+                if (rank != 6)
+                    newPiece.firstMovePerformed();
             } else if (pieceChar == 'n') {
                 newPiece = new Knight(rank, file, false);
             } else if (pieceChar == 'b') {

@@ -2,6 +2,7 @@ package edu.se181;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameLogic {
     private Board board;
@@ -15,9 +16,13 @@ public class GameLogic {
         board = b;
     }
 
-    private List<Square> getBaseMoves(Piece piece, boolean ignorePieces) {
+    protected Board getBoard() {
+        return board;
+    }
+
+    protected List<Square> getBaseMoves(Piece piece, boolean ignorePieces) {
         List<Square> squares = new ArrayList<>();
-        Square targetSquare = null;
+        Square targetSquare;
         Piece targetPiece = null;
         if (piece instanceof Pawn) {
             // we don't have to null check target square for pawns because they can't even try to move off the board
@@ -46,7 +51,7 @@ public class GameLogic {
                 if (targetSquare != null)
                     targetPiece = targetSquare.getOccupant();
                 if (targetPiece instanceof Pawn && targetPiece.isWhite() != piece.isWhite() && ((Pawn) targetPiece).isEnPassantable())
-                    squares.add(targetSquare);
+                    squares.add(board.getSquareByPieceOffset(piece, sign, i));
             }
         } else if (piece instanceof Knight) {
             // -2, -1, 1, 2
@@ -189,6 +194,87 @@ public class GameLogic {
     }
 
     public List<Square> getLegalMoves(Piece piece) {
-
+        List<Square> squares = getBaseMoves(piece, false);
+        if (checkState == 1) {
+            squares = squares.stream().filter((Square square) -> {
+                // Capture checking pawn by en passant
+                if (piece instanceof Pawn &&
+                        checkSquares.get(0).getOccupant() instanceof Pawn &&
+                        ((Pawn) checkSquares.get(0).getOccupant()).isEnPassantable() &&
+                        Math.abs(checkSquares.get(0).getRank() - square.getRank()) == 1 &&
+                        Math.abs(checkSquares.get(0).getFile() - square.getFile()) == 1) {
+                    return true;
+                }
+                return checkSquares.contains(square);
+            }).collect(Collectors.toList());
+        } else if (checkState == 2) {
+            if (!(piece instanceof King)) {
+                squares.clear();
+                return squares;
+            }
+        }
+        Piece pinner = piece.getPinnedBy();
+        if (pinner != null) {
+            List<Square> pinSquares = new ArrayList<>();
+            Square targetSquare;
+            int rankDir = 0;
+            int fileDir = 0;
+            int distance = 1;
+            pinSquares.add(board.getSquareByPieceOffset(pinner, 0, 0));
+            if (pinner.getRank() < piece.getRank())
+                rankDir = 1;
+            else if (pinner.getRank() > piece.getRank())
+                rankDir = -1;
+            if (pinner.getFile() < piece.getFile())
+                fileDir = 1;
+            else if (pinner.getFile() > piece.getFile())
+                fileDir = -1;
+            do {
+                targetSquare = board.getSquareByPieceOffset(pinner, rankDir * distance, fileDir * distance);
+                if (targetSquare != null)
+                    pinSquares.add(targetSquare);
+            } while (targetSquare != null);
+            squares = squares.stream().filter(pinSquares::contains).collect(Collectors.toList());
+        }
+        if (piece instanceof King) {
+            // Filter king's legal squares to ones that opponent pieces can't move to
+            if (piece.isWhite())
+                for (Piece other : board.getBlackPieces()) {
+                    squares = squares.stream().filter((Square s) -> !getBaseMoves(other, false).contains(s)).collect(Collectors.toList());
+                }
+            else
+                for (Piece other : board.getWhitePieces()) {
+                    squares = squares.stream().filter((Square s) -> !getBaseMoves(other, false).contains(s)).collect(Collectors.toList());
+                }
+        }
+        if (piece instanceof Pawn) {
+            // Prevent en passant capture from putting own king in check
+            squares = squares.stream().filter((Square square) -> {
+                // En passant capture
+                if (square.getFile() != piece.getFile() && square.getOccupant() == null) {
+                    boolean rankSliderFound = false;
+                    boolean kingFound = false;
+                    Piece targetPiece;
+                    for (int direction = -1; direction <= 1; direction += 2) {
+                        int distance = 1;
+                        do {
+                            targetPiece = board.getSquareByPieceOffset(piece, 0, direction * distance).getOccupant();
+                            if (targetPiece != null && targetPiece.getFile() == square.getFile()) {
+                                distance++;
+                                continue;
+                            }
+                            if (targetPiece instanceof Rook || targetPiece instanceof Queen && targetPiece.isWhite() != piece.isWhite())
+                                rankSliderFound = true;
+                            else if (targetPiece instanceof King && targetPiece.isWhite() == piece.isWhite())
+                                kingFound = true;
+                            distance++;
+                        } while (targetPiece == null);
+                    }
+                    return !(rankSliderFound && kingFound);
+                }
+                return true;
+            }).collect(Collectors.toList());
+        }
+        return squares;
     }
 }
