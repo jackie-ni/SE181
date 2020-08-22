@@ -11,6 +11,7 @@ class MainMenuScreen {
     @FXML
     private fun findGameButtonAction(event: ActionEvent) {
         //todo
+        GameStage.launch()
     }
 
     @FXML

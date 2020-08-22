@@ -3,13 +3,11 @@ package edu.se181;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 
 //Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
 
-    public static void launch(Stage stage) {
+    public static void launch() {
 
         BorderPane layout = new BorderPane();
         GridPane chessBoard = Chessboard.createChessBoard();
@@ -41,6 +39,6 @@ public class GameStage {
         bottom.setAlignment(Pos.CENTER);
         bottom.getChildren().addAll(surrender, draw);
 
-        MainApp.update(layout);
+        MainApp.Companion.updateStage(layout);
     }
 }
