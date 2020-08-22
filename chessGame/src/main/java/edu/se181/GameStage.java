@@ -8,10 +8,8 @@ import javafx.scene.Scene;
 
 //Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
-    private static final String CHESS_GAME = "Chess Game";
 
     public static void launch(Stage stage) {
-        stage.setTitle(CHESS_GAME);
 
         BorderPane layout = new BorderPane();
         GridPane chessBoard = Chessboard.createChessBoard();
@@ -43,8 +41,6 @@ public class GameStage {
         bottom.setAlignment(Pos.CENTER);
         bottom.getChildren().addAll(surrender, draw);
 
-        Scene scene = new Scene(layout, 600, 600);
-        stage.setScene(scene);
-        stage.show();
+        MainApp.update(layout);
     }
 }
