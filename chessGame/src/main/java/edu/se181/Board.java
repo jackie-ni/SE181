@@ -181,14 +181,17 @@ public class Board {
         return blackPieces;
     }
 
+    public Square getSquareByRankFile(int rank, int file) {
+        return squares[7 - rank][file];
+    }
+
     public Square getSquareByPieceOffset(Piece piece, int rankOffset, int fileOffset) {
         int newRank = piece.getRank() + rankOffset;
         int newFile = piece.getFile() + fileOffset;
         if (newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7)
             return null;
 
-        return squares[7 - newRank][newFile];
-
+        return getSquareByRankFile(newRank, newFile);
     }
 
     public Square getSquareByNotation(String notation) {
@@ -197,7 +200,7 @@ public class Board {
         int rank = (int) rankChar - 49;
         int file = (int) fileChar - 97;
 
-        return squares[7 - rank][file];
+        return getSquareByRankFile(rank, file);
     }
 
     // format: bbcdefpppp...
@@ -258,9 +261,7 @@ public class Board {
                 whitePieces.add(newPiece);
             else
                 blackPieces.add(newPiece);
-
-
-            squares[7 - rank][file].setOccupant(newPiece);
+            getSquareByRankFile(rank, file).setOccupant(newPiece);
         }
 
         // en passant pawn
