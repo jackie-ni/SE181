@@ -2,7 +2,7 @@ package edu.se181;
 
 import java.util.ArrayList;
 import java.util.List;
-import edu.se181.StringSources;
+import java.util.stream.Collectors;
 
 public class Board {
     private Square[][] squares;
@@ -26,15 +26,6 @@ public class Board {
         }
         whitePieces = new ArrayList<>();
         blackPieces = new ArrayList<>();
-    }
-
-    public void invertBoard() {
-        for (int rank = 0; rank < 8; rank++) {
-            for (int col = 0; col < 8; col++) {
-                squares[rank][col].setRank(rank);
-                squares[rank][col].setFile(7 - col);
-            }
-        }
     }
 
     public void initialize() {
@@ -92,8 +83,85 @@ public class Board {
         }
     }
 
-    public void move(Move move) {
-        // TODO: Implement move
+    public void makeMove(Move move) {
+        Piece piece = move.getPiece();
+
+        if (move instanceof RegularMove) {
+            if (move.isCapture()){
+                if (piece.isWhite()){
+                    blackPieces = blackPieces.stream()
+                                    .filter(p ->
+                                            p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                    .collect(Collectors.toList());
+                }
+                else {
+                    whitePieces = whitePieces.stream()
+                            .filter(p ->
+                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                            .collect(Collectors.toList());
+                }
+            }
+
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][piece.getFile()].setOccupant(piece);
+            //feels awkward that we still need to change piece position
+        }
+        else if (move instanceof CastleMove){
+            Piece rook;
+            if (((CastleMove) move).isKingSide){
+                rook = squares[7-piece.getRank()][7].getOccupant();
+                squares[7-piece.getRank()][7].setOccupant(null);
+                squares[7-piece.getRank()][piece.getFile()+1].setOccupant(rook);
+            }else{
+                rook = squares[7-piece.getRank()][0].getOccupant();
+                squares[7-piece.getRank()][0].setOccupant(null);
+                squares[7-piece.getRank()][piece.getFile()-1].setOccupant(rook);
+            }
+
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
+        }
+        else if (move instanceof PromoteMove){
+            Piece promotedPiece = ((PromoteMove) move).promotePiece;
+            if (piece.isWhite()){
+                whitePieces = whitePieces.stream()
+                        .filter(p ->
+                                p.getFile() != piece.getFile() && p.getRank() != piece.getRank())
+                        .collect(Collectors.toList());
+                whitePieces.add(promotedPiece);
+            }
+            else {
+                blackPieces = blackPieces.stream()
+                        .filter(p ->
+                                p.getFile() != piece.getFile() && p.getRank() != piece.getRank())
+                        .collect(Collectors.toList());
+                blackPieces.add(promotedPiece);
+            }
+
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(promotedPiece);
+        }
+        else if (move instanceof EnPassantMove){
+            if (piece.isWhite()){
+                blackPieces = blackPieces.stream()
+                        .filter(p ->
+                                p.getRank() != move.getRankDest()-1 && p.getFile() != move.getFileDest())
+                        .collect(Collectors.toList());
+                squares[7-move.getRankDest()+1][move.getFileDest()].setOccupant(null);
+            }
+            else {
+                whitePieces = whitePieces.stream()
+                        .filter(p ->
+                                p.getRank() != move.getRankDest()+1 && p.getFile() != move.getFileDest())
+                        .collect(Collectors.toList());
+                squares[7-move.getRankDest()-1][move.getFileDest()].setOccupant(null);
+            }
+
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
+
+
+        }
     }
 
     public Square[][] getSquares() {
