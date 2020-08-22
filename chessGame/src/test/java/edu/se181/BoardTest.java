@@ -45,9 +45,8 @@ public class BoardTest {
         Square testSquare;
         Square testSquare2;
         Class target;
-        for (int i = 0; i < 2; i++) {
             board = new Board();
-            board.initialize(i == 0);
+            board.initialize();
             for (int j = 0; j < 8; j++) {
                 testSquare = board.getSquareByNotation((char) (97 + j) + "1");
                 testSquare2 = board.getSquareByNotation((char) (97 + j) + "8");
@@ -72,14 +71,13 @@ public class BoardTest {
                 Assert.assertTrue(target.isInstance(testSquare.getOccupant()) && testSquare.getOccupant().isWhite());
                 Assert.assertTrue(target.isInstance(testSquare2.getOccupant()) && !testSquare2.getOccupant().isWhite());
             }
-        }
         Assert.assertEquals(board.getWhitePieces().size(), 16);
         Assert.assertEquals(board.getBlackPieces().size(), 16);
     }
 
     @Test
     public void getSquareByPieceOffsetTest() {
-        board.initialize(true);
+        board.initialize();
         // white king
         Piece piece = board.getSquareByNotation("e1").getOccupant();
         Assert.assertTrue(board.getSquareByPieceOffset(piece, 0, -2).getOccupant() instanceof Bishop);
@@ -90,14 +88,8 @@ public class BoardTest {
 
     @Test
     public void getSquareByNotationTest() {
-        board.initialize(true);
+        board.initialize();
         Square target;
-        target = board.getSquareByNotation("e1");
-        Assert.assertTrue(target.getOccupant() instanceof King && target.getOccupant().isWhite());
-        target = board.getSquareByNotation("d8");
-        Assert.assertTrue(target.getOccupant() instanceof Queen && !target.getOccupant().isWhite());
-        board = new Board();
-        board.initialize(false);
         target = board.getSquareByNotation("e1");
         Assert.assertTrue(target.getOccupant() instanceof King && target.getOccupant().isWhite());
         target = board.getSquareByNotation("d8");
@@ -106,7 +98,7 @@ public class BoardTest {
 
     @Test
     public void loadBoardTest() {
-        String testStr = "1001111rnbqkbnrpppppppp00000000000000000000000000000000PPPPPPPPRNBQKBNR";
+        String testStr = "001111rnbqkbnrpppppppp00000000000000000000000000000000PPPPPPPPRNBQKBNR";
         board.loadBoard(testStr);
         Square target;
         target = board.getSquares()[0][3];
@@ -115,9 +107,9 @@ public class BoardTest {
         Assert.assertTrue(target.getOccupant() instanceof King && target.getOccupant().isWhite());
         Assert.assertEquals(board.getWhitePieces().size(), 16);
         Assert.assertEquals(board.getBlackPieces().size(), 16);
-        testStr = "0e41001rnbqkbnrpppppppp00000000000000000000P00000000000PPPP0PPPRNBQKBNR";
+        testStr = "e41001rnbqkbnrpppppppp00000000000000000000P00000000000PPPP0PPPRNBQKBNR";
         board.loadBoard(testStr);
-        target = board.getSquares()[0][3];
+        target = board.getSquares()[7][4];
         Assert.assertTrue(target.getOccupant() instanceof King && target.getOccupant().isWhite());
         target = board.getSquareByNotation("e4");
         Assert.assertTrue(target.getOccupant() instanceof Pawn && target.getOccupant().isWhite());
@@ -132,17 +124,13 @@ public class BoardTest {
 
     @Test
     public void toBoardStateTest() {
-        board.initialize(true);
+        board.initialize();
         String testStr = board.toBoardState();
-        Assert.assertEquals(testStr, "1001111rnbqkbnrpppppppp00000000000000000000000000000000PPPPPPPPRNBQKBNR");
-        board = new Board();
-        board.initialize(false);
-        testStr = board.toBoardState();
-        Assert.assertEquals(testStr, "0001111rnbqkbnrpppppppp00000000000000000000000000000000PPPPPPPPRNBQKBNR");
+        Assert.assertEquals(testStr, "001111rnbqkbnrpppppppp00000000000000000000000000000000PPPPPPPPRNBQKBNR");
         board.getSquareByNotation("a1").getOccupant().firstMovePerformed();
         board.getSquareByNotation("e8").getOccupant().firstMovePerformed();
         ((Pawn) (board.getSquareByNotation("c7").getOccupant())).setEnPassantable(true);
         testStr = board.toBoardState();
-        Assert.assertEquals(testStr, "0c71000rnbqkbnrpppppppp00000000000000000000000000000000PPPPPPPPRNBQKBNR");
+        Assert.assertEquals(testStr, "c71000rnbqkbnrpppppppp00000000000000000000000000000000PPPPPPPPRNBQKBNR");
     }
 }
