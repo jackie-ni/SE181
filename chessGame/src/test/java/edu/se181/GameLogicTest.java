@@ -10,7 +10,7 @@ public class GameLogicTest {
     @Before
     public void beforeEach() {
         Board board = new Board();
-        board.initialize(true);
+        board.initialize();
         gameLogic = new GameLogic(board);
     }
 }
