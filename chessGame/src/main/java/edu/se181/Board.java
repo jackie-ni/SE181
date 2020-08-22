@@ -8,7 +8,7 @@ public class Board {
     private Square[][] squares;
     private List<Piece> whitePieces;
     private List<Piece> blackPieces;
-    private boolean playingWhite;
+
 
     public Board() {
         reset();
@@ -26,7 +26,6 @@ public class Board {
         }
         whitePieces = new ArrayList<>();
         blackPieces = new ArrayList<>();
-        playingWhite = true;
     }
 
     public void invertBoard() {
@@ -38,85 +37,57 @@ public class Board {
         }
     }
 
-    public void initialize(boolean white) {
-        playingWhite = white;
-
-        // invert board if playing black
-        if (!white) {
-            invertBoard();
-        }
-
+    public void initialize() {
         // opposing nonpawns
-        squares[0][0].setOccupant(new Rook(squares[0][0].getRank(), squares[0][0].getFile(), !white));
-        squares[0][1].setOccupant(new Knight(squares[0][1].getRank(), squares[0][1].getFile(), !white));
-        squares[0][2].setOccupant(new Bishop(squares[0][2].getRank(), squares[0][2].getFile(), !white));
-        if (white) {
-            squares[0][3].setOccupant(new Queen(squares[0][3].getRank(), squares[0][3].getFile(), !white));
-            squares[0][4].setOccupant(new King(squares[0][4].getRank(), squares[0][4].getFile(), !white));
-        } else {
-            squares[0][3].setOccupant(new King(squares[0][3].getRank(), squares[0][3].getFile(), !white));
-            squares[0][4].setOccupant(new Queen(squares[0][4].getRank(), squares[0][4].getFile(), !white));
-        }
-        squares[0][5].setOccupant(new Bishop(squares[0][5].getRank(), squares[0][5].getFile(), !white));
-        squares[0][6].setOccupant(new Knight(squares[0][6].getRank(), squares[0][6].getFile(), !white));
-        squares[0][7].setOccupant(new Rook(squares[0][7].getRank(), squares[0][7].getFile(), !white));
+        squares[0][0].setOccupant(new Rook(squares[0][0].getRank(), squares[0][0].getFile(), false));
+        squares[0][1].setOccupant(new Knight(squares[0][1].getRank(), squares[0][1].getFile(), false));
+        squares[0][2].setOccupant(new Bishop(squares[0][2].getRank(), squares[0][2].getFile(), false));
+        squares[0][3].setOccupant(new Queen(squares[0][3].getRank(), squares[0][3].getFile(), false));
+        squares[0][4].setOccupant(new King(squares[0][4].getRank(), squares[0][4].getFile(), false));
+        squares[0][5].setOccupant(new Bishop(squares[0][5].getRank(), squares[0][5].getFile(), false));
+        squares[0][6].setOccupant(new Knight(squares[0][6].getRank(), squares[0][6].getFile(), false));
+        squares[0][7].setOccupant(new Rook(squares[0][7].getRank(), squares[0][7].getFile(), false));
 
         // opposing pawns
-        squares[1][0].setOccupant(new Pawn(squares[1][0].getRank(), squares[1][0].getFile(), !white));
-        squares[1][1].setOccupant(new Pawn(squares[1][1].getRank(), squares[1][1].getFile(), !white));
-        squares[1][2].setOccupant(new Pawn(squares[1][2].getRank(), squares[1][2].getFile(), !white));
-        squares[1][3].setOccupant(new Pawn(squares[1][3].getRank(), squares[1][3].getFile(), !white));
-        squares[1][4].setOccupant(new Pawn(squares[1][4].getRank(), squares[1][4].getFile(), !white));
-        squares[1][5].setOccupant(new Pawn(squares[1][5].getRank(), squares[1][5].getFile(), !white));
-        squares[1][6].setOccupant(new Pawn(squares[1][6].getRank(), squares[1][6].getFile(), !white));
-        squares[1][7].setOccupant(new Pawn(squares[1][7].getRank(), squares[1][7].getFile(), !white));
+        squares[1][0].setOccupant(new Pawn(squares[1][0].getRank(), squares[1][0].getFile(), false));
+        squares[1][1].setOccupant(new Pawn(squares[1][1].getRank(), squares[1][1].getFile(), false));
+        squares[1][2].setOccupant(new Pawn(squares[1][2].getRank(), squares[1][2].getFile(), false));
+        squares[1][3].setOccupant(new Pawn(squares[1][3].getRank(), squares[1][3].getFile(), false));
+        squares[1][4].setOccupant(new Pawn(squares[1][4].getRank(), squares[1][4].getFile(), false));
+        squares[1][5].setOccupant(new Pawn(squares[1][5].getRank(), squares[1][5].getFile(), false));
+        squares[1][6].setOccupant(new Pawn(squares[1][6].getRank(), squares[1][6].getFile(), false));
+        squares[1][7].setOccupant(new Pawn(squares[1][7].getRank(), squares[1][7].getFile(), false));
 
         // player nonpawns
-        squares[7][0].setOccupant(new Rook(squares[7][0].getRank(), squares[7][0].getFile(), white));
-        squares[7][1].setOccupant(new Knight(squares[7][1].getRank(), squares[7][1].getFile(), white));
-        squares[7][2].setOccupant(new Bishop(squares[7][2].getRank(), squares[7][2].getFile(), white));
-        if (white) {
-            squares[7][3].setOccupant(new Queen(squares[7][3].getRank(), squares[7][3].getFile(), white));
-            squares[7][4].setOccupant(new King(squares[7][4].getRank(), squares[7][4].getFile(), white));
-        } else {
-            squares[7][3].setOccupant(new King(squares[7][3].getRank(), squares[7][3].getFile(), white));
-            squares[7][4].setOccupant(new Queen(squares[7][4].getRank(), squares[7][4].getFile(), white));
-        }
-        squares[7][5].setOccupant(new Bishop(squares[7][5].getRank(), squares[7][5].getFile(), white));
-        squares[7][6].setOccupant(new Knight(squares[7][6].getRank(), squares[7][6].getFile(), white));
-        squares[7][7].setOccupant(new Rook(squares[7][7].getRank(), squares[7][7].getFile(), white));
+        squares[7][0].setOccupant(new Rook(squares[7][0].getRank(), squares[7][0].getFile(), true));
+        squares[7][1].setOccupant(new Knight(squares[7][1].getRank(), squares[7][1].getFile(), true));
+        squares[7][2].setOccupant(new Bishop(squares[7][2].getRank(), squares[7][2].getFile(), true));
+        squares[7][3].setOccupant(new Queen(squares[7][3].getRank(), squares[7][3].getFile(), true));
+        squares[7][4].setOccupant(new King(squares[7][4].getRank(), squares[7][4].getFile(), true));
+        squares[7][5].setOccupant(new Bishop(squares[7][5].getRank(), squares[7][5].getFile(), true));
+        squares[7][6].setOccupant(new Knight(squares[7][6].getRank(), squares[7][6].getFile(), true));
+        squares[7][7].setOccupant(new Rook(squares[7][7].getRank(), squares[7][7].getFile(), true));
 
         //player pawns
-        squares[6][0].setOccupant(new Pawn(squares[6][0].getRank(), squares[6][0].getFile(), white));
-        squares[6][1].setOccupant(new Pawn(squares[6][1].getRank(), squares[6][1].getFile(), white));
-        squares[6][2].setOccupant(new Pawn(squares[6][2].getRank(), squares[6][2].getFile(), white));
-        squares[6][3].setOccupant(new Pawn(squares[6][3].getRank(), squares[6][3].getFile(), white));
-        squares[6][4].setOccupant(new Pawn(squares[6][4].getRank(), squares[6][4].getFile(), white));
-        squares[6][5].setOccupant(new Pawn(squares[6][5].getRank(), squares[6][5].getFile(), white));
-        squares[6][6].setOccupant(new Pawn(squares[6][6].getRank(), squares[6][6].getFile(), white));
-        squares[6][7].setOccupant(new Pawn(squares[6][7].getRank(), squares[6][7].getFile(), white));
+        squares[6][0].setOccupant(new Pawn(squares[6][0].getRank(), squares[6][0].getFile(), true));
+        squares[6][1].setOccupant(new Pawn(squares[6][1].getRank(), squares[6][1].getFile(), true));
+        squares[6][2].setOccupant(new Pawn(squares[6][2].getRank(), squares[6][2].getFile(), true));
+        squares[6][3].setOccupant(new Pawn(squares[6][3].getRank(), squares[6][3].getFile(), true));
+        squares[6][4].setOccupant(new Pawn(squares[6][4].getRank(), squares[6][4].getFile(), true));
+        squares[6][5].setOccupant(new Pawn(squares[6][5].getRank(), squares[6][5].getFile(), true));
+        squares[6][6].setOccupant(new Pawn(squares[6][6].getRank(), squares[6][6].getFile(), true));
+        squares[6][7].setOccupant(new Pawn(squares[6][7].getRank(), squares[6][7].getFile(), true));
 
-        if (white) {
-            for (int row = 0; row < 2; row++) {
-                for (int file = 0; file < 8; file++) {
-                    blackPieces.add(squares[row][file].getOccupant());
-                }
+
+        for (int row = 0; row < 2; row++) {
+            for (int file = 0; file < 8; file++) {
+                blackPieces.add(squares[row][file].getOccupant());
             }
-            for (int row = 6; row < 8; row++) {
-                for (int file = 0; file < 8; file++) {
-                    whitePieces.add(squares[row][file].getOccupant());
-                }
-            }
-        } else {
-            for (int row = 0; row < 2; row++) {
-                for (int file = 0; file < 8; file++) {
-                    whitePieces.add(squares[row][file].getOccupant());
-                }
-            }
-            for (int row = 6; row < 8; row++) {
-                for (int file = 0; file < 8; file++) {
-                    blackPieces.add(squares[row][file].getOccupant());
-                }
+        }
+
+        for (int row = 6; row < 8; row++) {
+            for (int file = 0; file < 8; file++) {
+                whitePieces.add(squares[row][file].getOccupant());
             }
         }
     }
@@ -215,10 +186,9 @@ public class Board {
         int newFile = piece.getFile() + fileOffset;
         if (newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7)
             return null;
-        if (playingWhite)
-            return squares[7 - newRank][newFile];
-        else
-            return squares[newRank][7 - newFile];
+
+        return squares[7 - newRank][newFile];
+
     }
 
     public Square getSquareByNotation(String notation) {
@@ -226,16 +196,11 @@ public class Board {
         char fileChar = notation.charAt(0);
         int rank = (int) rankChar - 49;
         int file = (int) fileChar - 97;
-        Square ret;
-        if (playingWhite)
-            ret = squares[7 - rank][file];
-        else
-            ret = squares[rank][7 - file];
-        return ret;
+
+        return squares[7 - rank][file];
     }
 
-    // format: abbcdefpppp...
-    // a - 0 if playing black, 1 if playing white
+    // format: bbcdefpppp...
     // bb - square of en passantable pawn or 00 if there isn't one
     // c - 1 if white can castle kingside, 0 otherwise
     // d - 1 if white can castle queenside, 0 otherwise
@@ -245,12 +210,8 @@ public class Board {
     // pppp... - indicates piece at a8, b8, ... h8, a7, b7, ..., h1 (top left to bottom right by row when white)
     public void loadBoard(String str) {
         reset();
-        String meta = str.substring(0, 7);
-        String pieces = str.substring(7);
-        if (meta.substring(0, 1).equals("0")) {
-            invertBoard();
-            playingWhite = false;
-        }
+        String meta = str.substring(0, 6);
+        String pieces = str.substring(6);
 
         // i indicates the square on the board consistent with standard reading when playing white
         // that is a8, b8, ... h8, a7, b7, ..., h1
@@ -293,48 +254,47 @@ public class Board {
                 whitePieces.add(newPiece);
             else
                 blackPieces.add(newPiece);
-            if (playingWhite)
-                squares[7 - rank][file].setOccupant(newPiece);
-            else
-                squares[rank][7 - file].setOccupant(newPiece);
+
+
+            squares[7 - rank][file].setOccupant(newPiece);
         }
 
         // en passant pawn
-        if (!meta.substring(1, 3).equals("00")) {
+        if (!meta.substring(0, 2).equals("00")) {
             try {
-                Pawn pawn = (Pawn) getSquareByNotation(meta.substring(1, 3)).getOccupant();
+                Pawn pawn = (Pawn) getSquareByNotation(meta.substring(0, 2)).getOccupant();
                 pawn.setEnPassantable(true);
             } catch (ClassCastException e) {
-                System.out.println("The piece on square " + meta.substring(1, 3) + " was not a pawn. Skipping en passantable...");
+                System.out.println("The piece on square " + meta.substring(0, 2) + " was not a pawn. Skipping en passantable...");
             } catch (NullPointerException e) {
-                System.out.println("There is no piece on square " + meta.substring(1, 3) + " but it should be a pawn. Skipping en passantable...");
+                System.out.println("There is no piece on square " + meta.substring(0, 2) + " but it should be a pawn. Skipping en passantable...");
             }
         }
 
         // we don't have to check if the piece is a rook because a rook not on its starting square will disable castling automatically
         // white kingside castle
-        if (meta.charAt(3) == '0') {
+        if (meta.charAt(2) == '0') {
             Piece piece = getSquareByNotation("h1").getOccupant();
             if (piece != null)
                 piece.firstMovePerformed();
         }
 
         // white queenside castle
-        if (meta.charAt(4) == '0') {
+        if (meta.charAt(3) == '0') {
             Piece piece = getSquareByNotation("a1").getOccupant();
             if (piece != null)
                 piece.firstMovePerformed();
         }
 
         // black kingside castle
-        if (meta.charAt(5) == '0') {
+        if (meta.charAt(4) == '0') {
             Piece piece = getSquareByNotation("h8").getOccupant();
             if (piece != null)
                 piece.firstMovePerformed();
         }
 
         // black queenside castle
-        if (meta.charAt(6) == '0') {
+        if (meta.charAt(5) == '0') {
             Piece piece = getSquareByNotation("a8").getOccupant();
             if (piece != null)
                 piece.firstMovePerformed();
@@ -343,10 +303,6 @@ public class Board {
 
     public String toBoardState() {
         String ret = "";
-        if (playingWhite)
-            ret += "1";
-        else
-            ret += "0";
 
         // en passant
         boolean foundEP = false;
@@ -399,71 +355,38 @@ public class Board {
         else
             ret += "0";
 
-        if (playingWhite) {
-            for (int row = 0; row < 8; row++) {
-                for (int file = 0; file < 8; file++) {
-                    Piece piece = squares[row][file].getOccupant();
-                    if (piece instanceof Pawn && piece.isWhite())
-                        ret += "P";
-                    else if (piece instanceof Knight && piece.isWhite())
-                        ret += "N";
-                    else if (piece instanceof Bishop && piece.isWhite())
-                        ret += "B";
-                    else if (piece instanceof Rook && piece.isWhite())
-                        ret += "R";
-                    else if (piece instanceof Queen && piece.isWhite())
-                        ret += "Q";
-                    else if (piece instanceof King && piece.isWhite())
-                        ret += "K";
-                    else if (piece instanceof Pawn && !piece.isWhite())
-                        ret += "p";
-                    else if (piece instanceof Knight && !piece.isWhite())
-                        ret += "n";
-                    else if (piece instanceof Bishop && !piece.isWhite())
-                        ret += "b";
-                    else if (piece instanceof Rook && !piece.isWhite())
-                        ret += "r";
-                    else if (piece instanceof Queen && !piece.isWhite())
-                        ret += "q";
-                    else if (piece instanceof King && !piece.isWhite())
-                        ret += "k";
-                    else
-                        ret += "0";
-                }
-            }
-        } else {
-            for (int row = 7; row >= 0; row--) {
-                for (int file = 7; file >= 0; file--) {
-                    Piece piece = squares[row][file].getOccupant();
-                    if (piece instanceof Pawn && piece.isWhite())
-                        ret += "P";
-                    else if (piece instanceof Knight && piece.isWhite())
-                        ret += "N";
-                    else if (piece instanceof Bishop && piece.isWhite())
-                        ret += "B";
-                    else if (piece instanceof Rook && piece.isWhite())
-                        ret += "R";
-                    else if (piece instanceof Queen && piece.isWhite())
-                        ret += "Q";
-                    else if (piece instanceof King && piece.isWhite())
-                        ret += "K";
-                    else if (piece instanceof Pawn && !piece.isWhite())
-                        ret += "p";
-                    else if (piece instanceof Knight && !piece.isWhite())
-                        ret += "n";
-                    else if (piece instanceof Bishop && !piece.isWhite())
-                        ret += "b";
-                    else if (piece instanceof Rook && !piece.isWhite())
-                        ret += "r";
-                    else if (piece instanceof Queen && !piece.isWhite())
-                        ret += "q";
-                    else if (piece instanceof King && !piece.isWhite())
-                        ret += "k";
-                    else
-                        ret += "0";
-                }
+        for (int row = 0; row < 8; row++) {
+            for (int file = 0; file < 8; file++) {
+                Piece piece = squares[row][file].getOccupant();
+                if (piece instanceof Pawn && piece.isWhite())
+                    ret += "P";
+                else if (piece instanceof Knight && piece.isWhite())
+                    ret += "N";
+                else if (piece instanceof Bishop && piece.isWhite())
+                    ret += "B";
+                else if (piece instanceof Rook && piece.isWhite())
+                    ret += "R";
+                else if (piece instanceof Queen && piece.isWhite())
+                    ret += "Q";
+                else if (piece instanceof King && piece.isWhite())
+                    ret += "K";
+                else if (piece instanceof Pawn && !piece.isWhite())
+                    ret += "p";
+                else if (piece instanceof Knight && !piece.isWhite())
+                    ret += "n";
+                else if (piece instanceof Bishop && !piece.isWhite())
+                    ret += "b";
+                else if (piece instanceof Rook && !piece.isWhite())
+                    ret += "r";
+                else if (piece instanceof Queen && !piece.isWhite())
+                    ret += "q";
+                else if (piece instanceof King && !piece.isWhite())
+                    ret += "k";
+                else
+                    ret += "0";
             }
         }
+
         return ret;
     }
 }
