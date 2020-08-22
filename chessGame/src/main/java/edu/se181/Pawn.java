@@ -5,6 +5,7 @@ public class Pawn extends Piece {
 
     public Pawn(int r, int f, boolean w) {
         super(r, f, w);
+        enPassantable = false;
     }
 
     public boolean isEnPassantable () {
