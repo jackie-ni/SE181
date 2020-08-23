@@ -18,6 +18,7 @@ public class GameLogicTest {
         else
             return Integer.compare(self.getFile(), other.getFile());
     };
+
     private Square mapMoveToSquare(Move move) {
         return gameLogic.getBoard().getSquareByRankFile(move.getRankDest(), move.getFileDest());
     }
@@ -322,6 +323,7 @@ public class GameLogicTest {
 
         Assert.assertEquals(result, "a5xb6e.p.");
     }
+    
     // getBaseMoves Tests
 
     @Test
