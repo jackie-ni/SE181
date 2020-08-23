@@ -5,13 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameLogicTest {
-    private static Comparator<Square> squareComparator = (Square self, Square other) -> {
+    private static final Comparator<Square> squareComparator = (Square self, Square other) -> {
         if (self.getRank() > other.getRank())
             return 1;
         else if (self.getRank() < other.getRank())
@@ -100,7 +99,7 @@ public class GameLogicTest {
         Piece piece = gameLogic.getBoard().getSquareByNotation("a7").getOccupant();
         Piece promotedPiece = new Queen(7,0,piece.isWhite());
 
-        Move expectedResult = new PromoteMove((Pawn)piece, 7, 0, promotedPiece);
+        Move expectedResult = new PromoteMove((Pawn)piece, 7, 0, false, promotedPiece);
         Move result = gameLogic.convertToMove(notation);
 
         Assert.assertEquals(result.getPiece(), expectedResult.getPiece());
@@ -150,9 +149,9 @@ public class GameLogicTest {
 
     @Test
     public void convertToNotation_GivenCastleMoveKingSide_ReturnsCorrectNotation(){
-        Piece piece = new King(0,4, true);
+        King piece = new King(0,4, true);
 
-        Move move = new CastleMove((King) piece,true);
+        Move move = new CastleMove(piece,true);
 
         String result = gameLogic.convertToNotation(move);
 
@@ -161,9 +160,9 @@ public class GameLogicTest {
 
     @Test
     public void convertToNotation_GivenCastleMoveQueenSide_ReturnsCorrectNotation(){
-        Piece piece = new King(0,4, true);
+        King piece = new King(0,4, true);
 
-        Move move = new CastleMove((King) piece,false);
+        Move move = new CastleMove(piece,false);
 
         String result = gameLogic.convertToNotation(move);
 
@@ -172,10 +171,10 @@ public class GameLogicTest {
 
     @Test
     public void convertToNotation_GivenPromoteMove_ReturnsCorrectNotation(){
-        Piece piece = new Pawn(6,0, true);
+        Pawn piece = new Pawn(6,0, true);
         Piece promotedPiece = new Queen(7,0,true);
 
-        Move move = new PromoteMove((Pawn) piece,7, 0, promotedPiece);
+        Move move = new PromoteMove(piece, 7, 0, false, promotedPiece);
 
         String result = gameLogic.convertToNotation(move);
 
@@ -184,9 +183,9 @@ public class GameLogicTest {
 
     @Test
     public void convertToNotation_GivenEnPassantMove_ReturnsCorrectNotation(){
-        Piece piece = new Pawn(4,0, true);
+        Pawn piece = new Pawn(4,0, true);
 
-        Move move = new EnPassantMove((Pawn) piece,5, 1);
+        Move move = new EnPassantMove(piece,5, 1);
 
         String result = gameLogic.convertToNotation(move);
 

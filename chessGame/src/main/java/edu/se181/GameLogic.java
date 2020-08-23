@@ -351,10 +351,6 @@ public class GameLogic {
         return moves;
     }
 
-    public Board getBoard(){
-        return board;
-    }
-
     public Move convertToMove(String notation){
         boolean isCapture = false;
         String startSquare, destSqaure;
@@ -407,7 +403,7 @@ public class GameLogic {
             if(lastChar.equals("Q")){
                 promotedPiece = new Queen(rank, file, piece.isWhite());
             }
-            return new PromoteMove((Pawn)piece, rank, file, promotedPiece);
+            return new PromoteMove((Pawn)piece, rank, file, isCapture, promotedPiece);
         }
 
         if (notation.contains("e.p.")){
