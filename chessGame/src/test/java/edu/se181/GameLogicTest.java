@@ -31,6 +31,137 @@ public class GameLogicTest {
         gameLogic = new GameLogic(board);
     }
 
+    // findChecks Tests
+
+    @Test
+    public void findChecks_NoChecks() {
+        gameLogic.getBoard().loadBoard("00000000000k000r000000000000000000000000000000000K00000000000000000000");
+        // https://lichess.org/editor/5k2/1r6/8/8/8/3K4/5Q2/8_b_-_-_0_1
+        gameLogic.findChecks(true);
+        Assert.assertEquals(0, gameLogic.checkState);
+        Assert.assertEquals(0, gameLogic.checkSquares.size());
+    }
+
+    @Test
+    public void findChecks_SliderPiece_OneCheck() {
+        gameLogic.getBoard().loadBoard("00000000000k000r000000000000000000000000000000000K000000000Q0000000000");
+        // https://lichess.org/editor/5k2/1r6/8/8/8/3K4/5Q2/8_b_-_-_0_1
+        gameLogic.findChecks(true);
+        Assert.assertEquals(1, gameLogic.checkState);
+        Assert.assertEquals(7, gameLogic.checkSquares.size());
+        for (int i = 1; i <=7 ; i++) {
+            int rank = i;
+            Assert.assertTrue(gameLogic.checkSquares.stream().anyMatch((Square s) -> s.getRank() == rank && s.getFile() == 5));
+        }
+    }
+
+    @Test
+    public void findChecks_NonSliderPiece_OneCheck() {
+        gameLogic.getBoard().loadBoard("00000000000k000r0000000000N0000000000000000000000K00000000000000000000");
+        // https://lichess.org/editor/5k2/1r6/4N3/8/8/3K4/8/8_b_-_-_0_1
+        gameLogic.findChecks(true);
+        Assert.assertEquals(1, gameLogic.checkState);
+        Assert.assertEquals(1, gameLogic.checkSquares.size());
+        Assert.assertTrue(gameLogic.checkSquares.stream().anyMatch((Square s) -> s.getRank() == 5 && s.getFile() == 4));
+    }
+
+    @Test
+    public void findChecks_TwoChecks() {
+        gameLogic.getBoard().loadBoard("00000000000k000r0000000000N0000000000000000000000K000000000Q0000000000");
+        // https://lichess.org/editor/5k2/1r6/4N3/8/8/3K4/5Q2/8_b_-_-_0_1
+        gameLogic.findChecks(true);
+        Assert.assertEquals(2, gameLogic.checkState);
+        Assert.assertEquals(0, gameLogic.checkSquares.size());
+    }
+
+    // hasLegalMove Tests
+
+    @Test
+    public void hasLegalMove_NoMoveInCheck_ReturnsFalse() {
+        gameLogic.getBoard().loadBoard("000000000000rk00000Npp00000000000000000000000000000000000000000000K000");
+        // https://lichess.org/editor/6rk/5Npp/8/8/8/8/8/4K3_b_-_-_0_1
+
+        gameLogic.checkState = 1;
+        gameLogic.checkSquares.add(gameLogic.getBoard().getSquareByNotation("f7"));
+
+        Assert.assertFalse(gameLogic.hasLegalMove(false));
+    }
+
+    @Test
+    public void hasLegalMove_NoMoveNoCheck_ReturnsFalse() {
+        gameLogic.getBoard().loadBoard("0000000000000k000000000000000000000000000000000000000000000q000000000K");
+        // https://lichess.org/editor/7k/8/8/8/8/8/5q2/7K_w_-_-_0_1
+        Assert.assertFalse(gameLogic.hasLegalMove(true));
+    }
+
+    @Test
+    public void hasLegalMove_MoveInCheck_ReturnsTrue() {
+        gameLogic.getBoard().loadBoard("000000000000rk000q0Npp00000000000000000000000000000000000000000000K000");
+        // https://lichess.org/editor/6rk/3q1Npp/8/8/8/8/8/4K3_b_-_-_0_1
+
+        gameLogic.checkState = 1;
+        gameLogic.checkSquares.add(gameLogic.getBoard().getSquareByNotation("f7"));
+
+        Assert.assertTrue(gameLogic.hasLegalMove(false));
+    }
+
+    @Test
+    public void hasLegalMove_MoveNoCheck_ReturnsTrue() {
+        // board.initialize() called in test setup
+        Assert.assertTrue(gameLogic.hasLegalMove(true));
+    }
+
+    // determinePins Tests
+
+    @Test
+    public void determinePins_PinByBishop_PinnerSet() {
+        gameLogic.getBoard().loadBoard("0000000000000000000000000q000000000000b00B00b00Q00000000R0N000000K0R0r");
+        // https://lichess.org/editor/8/8/3q4/8/b2B2b1/1Q6/2R1N3/3K1R1r_w_-_-_0_1
+        gameLogic.determinePins(false);
+
+        Piece pinner = gameLogic.getBoard().getSquareByNotation("g4").getOccupant();
+        Piece pinnee = gameLogic.getBoard().getSquareByNotation("e2").getOccupant();
+
+        Assert.assertEquals(pinner, pinnee.getPinnedBy());
+    }
+
+    @Test
+    public void determinePins_PinByRook_PinnerSet() {
+        gameLogic.getBoard().loadBoard("0000000000000000000000000q000000000000b00B00b00Q00000000R0N000000K0R0r");
+        // https://lichess.org/editor/8/8/3q4/8/b2B2b1/1Q6/2R1N3/3K1R1r_w_-_-_0_1
+        gameLogic.determinePins(false);
+
+        Piece pinner = gameLogic.getBoard().getSquareByNotation("h1").getOccupant();
+        Piece pinnee = gameLogic.getBoard().getSquareByNotation("f1").getOccupant();
+
+        Assert.assertEquals(pinner, pinnee.getPinnedBy());
+    }
+
+    @Test
+    public void determinePins_PinByQueen_PinnerSet() {
+        gameLogic.getBoard().loadBoard("0000000000000000000000000q000000000000b00B00b00Q00000000R0N000000K0R0r");
+        // https://lichess.org/editor/8/8/3q4/8/b2B2b1/1Q6/2R1N3/3K1R1r_w_-_-_0_1
+        gameLogic.determinePins(false);
+
+        Piece pinner = gameLogic.getBoard().getSquareByNotation("d6").getOccupant();
+        Piece pinnee = gameLogic.getBoard().getSquareByNotation("d4").getOccupant();
+
+        Assert.assertEquals(pinner, pinnee.getPinnedBy());
+    }
+
+    @Test
+    public void determinePins_TwoBetweenNoPins_NoPinnersSet() {
+        gameLogic.getBoard().loadBoard("0000000000000000000000000q000000000000b00B00b00Q00000000R0N000000K0R0r");
+        // https://lichess.org/editor/8/8/3q4/8/b2B2b1/1Q6/2R1N3/3K1R1r_w_-_-_0_1
+        gameLogic.determinePins(false);
+
+        Piece notPinnee = gameLogic.getBoard().getSquareByNotation("b3").getOccupant();
+        Piece notPinnee2 = gameLogic.getBoard().getSquareByNotation("c2").getOccupant();
+
+        Assert.assertNull(notPinnee.getPinnedBy());
+        Assert.assertNull(notPinnee2.getPinnedBy());
+    }
+
     // getBaseMoves Tests
 
     @Test
@@ -373,7 +504,6 @@ public class GameLogicTest {
 
     @Test
     public void getLegalMoves_MovePiecePinned_OnlyAllowOnPinAxis() {
-        // d40000 00000000 00000000 00000000 00000000 k0pP0Q0q 00000000 00000B00 0000K000
         gameLogic.getBoard().loadBoard("d4000000000000000000000000000000000000k0pP0Q0q0000000000000B000000K000");
         // https://lichess.org/editor/8/8/8/8/k1pP1Q1q/8/5B2/4K3_b_-_d3_0_1
         Bishop bishop = (Bishop) gameLogic.getBoard().getSquareByNotation("f2").getOccupant();
