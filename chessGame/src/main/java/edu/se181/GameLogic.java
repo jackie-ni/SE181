@@ -218,18 +218,18 @@ public class GameLogic {
                         if (!(rook instanceof Rook) || rook.hasMoved() || rook.getRank() != 0 || (rook.getFile() != 0 && rook.getFile() != 7))
                             continue;
                         if (rook.getFile() == 0)
-                            moves.add(new CastleMove((King) piece, 2, false));
+                            moves.add(new CastleMove((King) piece, false));
                         else
-                            moves.add(new CastleMove((King) piece, 6, true));
+                            moves.add(new CastleMove((King) piece, true));
                     }
                 else
                     for (Piece rook : board.getBlackPieces()) {
                         if (!(rook instanceof Rook) || rook.hasMoved() || rook.getRank() != 7 || (rook.getFile() != 0 && rook.getFile() != 7))
                             continue;
                         if (rook.getFile() == 0)
-                            moves.add(new CastleMove((King) piece, 2, false));
+                            moves.add(new CastleMove((King) piece, false));
                         else
-                            moves.add(new CastleMove((King) piece, 6, true));
+                            moves.add(new CastleMove((King) piece, true));
                     }
             }
         }

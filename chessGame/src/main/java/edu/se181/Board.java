@@ -104,7 +104,6 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][piece.getFile()].setOccupant(piece);
-            //feels awkward that we still need to change piece position
         }
         else if (move instanceof CastleMove){
             Piece rook;
@@ -123,6 +122,20 @@ public class Board {
         }
         else if (move instanceof PromoteMove){
             Piece promotedPiece = ((PromoteMove) move).promotePiece;
+            if (move.isCapture()){
+                if (piece.isWhite()){
+                    blackPieces = blackPieces.stream()
+                            .filter(p ->
+                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                            .collect(Collectors.toList());
+                }
+                else {
+                    whitePieces = whitePieces.stream()
+                            .filter(p ->
+                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                            .collect(Collectors.toList());
+                }
+            }
             if (piece.isWhite()){
                 whitePieces = whitePieces.stream()
                         .filter(p ->
@@ -159,8 +172,6 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
-
-
         }
     }
 
