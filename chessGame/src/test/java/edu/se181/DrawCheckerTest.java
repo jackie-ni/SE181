@@ -21,6 +21,107 @@ public class DrawCheckerTest {
 	}
 
 	@Test
+	public void isIrreversibleMove_GivenPawnMove_Returns1(){
+		Piece piece = new Pawn(1,0, true);
+		Move move = new RegularMove(piece, 2, 0, false);
+
+		int result = DrawChecker.isIrreversibleMove(move);
+		Assert.assertEquals(1, result);
+	}
+
+	@Test
+	public void isIrreversibleMove_GivenMoveWithCapture_Returns1(){
+		Piece piece = new Rook(1,0, true);
+		Move move = new RegularMove(piece, 2, 0, true);
+
+		int result = DrawChecker.isIrreversibleMove(move);
+		Assert.assertEquals(1, result);
+	}
+
+	@Test
+	public void isIrreversibleMove_GivenFirstRookMove_Returns2(){
+		Piece piece = new Rook(1,0, true);
+		Move move = new RegularMove(piece, 2, 0, false);
+
+		int result = DrawChecker.isIrreversibleMove(move);
+		Assert.assertEquals(2, result);
+	}
+
+	@Test
+	public void isIrreversibleMove_GivenNotFirstRookMove_Returns0(){
+		Piece piece = new Rook(1,0, true);
+		piece.hasMoved();
+		Move move = new RegularMove(piece, 2, 0, false);
+
+		int result = DrawChecker.isIrreversibleMove(move);
+		Assert.assertEquals(2, result);
+	}
+
+	@Test
+	public void isIrreversibleMove_GivenCastleMove_Returns2(){
+		King piece = new King(0,4, true);
+		Move move = new CastleMove(piece, true);
+
+		int result = DrawChecker.isIrreversibleMove(move);
+		Assert.assertEquals(2, result);
+	}
+
+	@Test
+	public void isIrreversibleMove_GivenReversibleMove_Returns0(){
+		Piece piece = new Queen(0,3, true);
+		Move move = new RegularMove(piece, 1,3, false);
+
+		int result = DrawChecker.isIrreversibleMove(move);
+		Assert.assertEquals(0, result);
+	}
+
+	@Test
+	public void isThreefoldRepetition_GivenNoRepetitionAndFullList_ReturnsFalse(){
+		List<String> boardStateList = new ArrayList<String>();
+		boardStateList.add("string1");
+		boardStateList.add("string2");
+		boardStateList.add("string3");
+
+		int index = 0;
+
+		boolean result = DrawChecker.isThreefoldRepetition(boardStateList, index);
+
+		Assert.assertFalse(result);
+	}
+
+	@Test
+	public void isThreefoldRepetition_GivenRepetitionAndFullList_ReturnsTrue(){
+		List<String> boardStateList = new ArrayList<String>();
+		boardStateList.add("string1");
+		boardStateList.add("string2");
+		boardStateList.add("string3");
+		boardStateList.add("string3");
+		boardStateList.add("string3");
+
+		int index = 0;
+
+		boolean result = DrawChecker.isThreefoldRepetition(boardStateList, index);
+
+		Assert.assertTrue(result);
+	}
+
+	@Test
+	public void isThreefoldRepetition_GivenRepetitionAndSubList_ReturnsTrue(){
+		List<String> boardStateList = new ArrayList<String>();
+		boardStateList.add("string1");
+		boardStateList.add("string2");
+		boardStateList.add("string3");
+		boardStateList.add("string3");
+		boardStateList.add("string3");
+
+		int index = 2;
+
+		boolean result = DrawChecker.isThreefoldRepetition(boardStateList, index);
+
+		Assert.assertTrue(result);
+	}
+
+	@Test
 	public void isDeadPosition_GivenKingVsKing_returnsTrue(){
 		board.loadBoard("00000000000k0000000000000000000000000000000000000K00000000000000000000");
 		// https://lichess.org/editor/5k2/8/8/8/8/3K4/8/8_b_-_-_0_1

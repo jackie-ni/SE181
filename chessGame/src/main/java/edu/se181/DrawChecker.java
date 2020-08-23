@@ -1,13 +1,42 @@
 package edu.se181;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class DrawChecker {
 
+
     public DrawChecker(){}
 
-    public boolean isStalemate(Board board){
-		return false;
+    static public int isIrreversibleMove(Move move){
+    	Piece piece = move.getPiece();
+		if (piece instanceof Pawn || move.isCapture()){
+			return 1;
+		}
+
+		if (piece instanceof Rook || piece instanceof King){
+			if (!piece.hasMoved()){
+				return 2;
+			}
+		}
+
+		return 0;
+	}
+
+	static public boolean isThreefoldRepetition(List<String> boardStateList, int irreversibleMoveIndex){
+		HashMap<String, Integer> boardStateMap = new HashMap<>();
+    	for(String boardState : boardStateList.subList(irreversibleMoveIndex, boardStateList.size()-1)){
+    		boardStateMap.putIfAbsent(boardState, 1);
+			if (boardStateMap.containsKey(boardState)){
+				if (boardStateMap.get(boardState) == 2) {
+					return true;
+				}
+				else{
+					boardStateMap.replace(boardState, boardStateMap.get(boardState)+1);
+				}
+			}
+		}
+    	return false;
 	}
 
 	public boolean isDeadPosition(Board board){
