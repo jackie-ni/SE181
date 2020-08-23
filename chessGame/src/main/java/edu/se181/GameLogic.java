@@ -334,26 +334,28 @@ public class GameLogic {
                 if (targetSquare != null) {
                     targetPiece = targetSquare.getOccupant();
                     if (targetPiece instanceof Pawn && targetPiece.isWhite() != piece.isWhite() && ((Pawn) targetPiece).isEnPassantable())
-                        moves.add(new EnPassantMove((Pawn) piece, targetSquare.getRank() + (piece.isWhite() ? 1 : -1), targetSquare.getFile()));
+                        moves.add(new EnPassantMove((Pawn) piece, targetSquare.getRank() + sign, targetSquare.getFile()));
                 }
             }
         } else if (piece instanceof Knight) {
             // -2, -1, 1, 2
-            for (int i = -2; i <= 2; i++) {
-                if (i == 0)
-                    continue;
-                // -1, 1 if i is -2, 2; -2, 2 if i is -1, 1
-                for (int j = -3 + Math.abs(i); j <= 3 - Math.abs(i); j += 3 - Math.abs(i)) {
-                    if (j == 0)
-                        continue;
-                    targetSquare = board.getSquareByPieceOffset(piece, i, j);
-                    if (targetSquare != null) {
-                        targetPiece = targetSquare.getOccupant();
-                        if (targetPiece == null)
-                            moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
-                        else if (targetPiece.isWhite() != piece.isWhite())
-                            moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
-                    }
+            int[][] knightMoves = new int[8][2];
+            knightMoves[0] = new int[]{-2, -1};
+            knightMoves[1] = new int[]{-2, 1};
+            knightMoves[2] = new int[]{-1, 2};
+            knightMoves[3] = new int[]{1, 2};
+            knightMoves[4] = new int[]{2, 1};
+            knightMoves[5] = new int[]{2, -1};
+            knightMoves[6] = new int[]{1, -2};
+            knightMoves[7] = new int[]{-1, -2};
+            for (int[] knightMove : knightMoves) {
+                targetSquare = board.getSquareByPieceOffset(piece, knightMove[0], knightMove[1]);
+                if (targetSquare != null) {
+                    targetPiece = targetSquare.getOccupant();
+                    if (targetPiece == null)
+                        moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
+                    else if (targetPiece.isWhite() != piece.isWhite())
+                        moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
                 }
             }
         } else if (piece instanceof Bishop) {
@@ -368,7 +370,7 @@ public class GameLogic {
                                 moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                             else if (targetPiece.isWhite() != piece.isWhite()) {
                                 moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
-                                if (!(ignoreEnemyKing && targetPiece instanceof King && targetPiece.isWhite() != piece.isWhite()))
+                                if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                     break;
                             } else
                                 break;
@@ -389,7 +391,7 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                         else if (targetPiece.isWhite() != piece.isWhite()) {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
-                            if (!(ignoreEnemyKing && targetPiece instanceof King && targetPiece.isWhite() != piece.isWhite()))
+                            if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
                         } else
                             break;
@@ -405,7 +407,7 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                         else if (targetPiece.isWhite() != piece.isWhite()) {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
-                            if (!(ignoreEnemyKing && targetPiece instanceof King && targetPiece.isWhite() != piece.isWhite()))
+                            if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
                         } else
                             break;
@@ -426,7 +428,7 @@ public class GameLogic {
                                 moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                             else if (targetPiece.isWhite() != piece.isWhite()) {
                                 moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
-                                if (!(ignoreEnemyKing && targetPiece instanceof King && targetPiece.isWhite() != piece.isWhite()))
+                                if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                     break;
                             } else
                                 break;
@@ -446,7 +448,7 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                         else if (targetPiece.isWhite() != piece.isWhite()) {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
-                            if (!(ignoreEnemyKing && targetPiece instanceof King && targetPiece.isWhite() != piece.isWhite()))
+                            if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
                         } else
                             break;
@@ -462,7 +464,7 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                         else if (targetPiece.isWhite() != piece.isWhite()) {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
-                            if (!(ignoreEnemyKing && targetPiece instanceof King && targetPiece.isWhite() != piece.isWhite()))
+                            if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
                         } else
                             break;
@@ -552,17 +554,25 @@ public class GameLogic {
                     pinSquares.add(targetSquare);
                 distance++;
             } while (targetSquare != null && (targetSquare.getOccupant() == null || targetSquare.getOccupant() == piece));
-            moves = moves.stream().filter((Move move) -> pinSquares.contains(board.getSquareByRankFile(move.getRankDest(), move.getFileDest()))).collect(Collectors.toList());
+            moves = moves.stream()
+                    .filter((Move move) -> pinSquares.contains(board.getSquareByRankFile(move.getRankDest(), move.getFileDest())))
+                    .collect(Collectors.toList());
         }
         if (piece instanceof King) {
             // Filter king's legal squares to ones that opponent pieces can't move to
             if (piece.isWhite())
                 for (Piece other : board.getBlackPieces()) {
-                    moves = moves.stream().filter((Move m) -> getBaseMoves(other, true).stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest())).collect(Collectors.toList());
+                    moves = moves.stream()
+                            .filter((Move m) -> getBaseMoves(other, true)
+                                    .stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest()))
+                            .collect(Collectors.toList());
                 }
             else
                 for (Piece other : board.getWhitePieces()) {
-                    moves = moves.stream().filter((Move m) -> getBaseMoves(other, true).stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest())).collect(Collectors.toList());
+                    moves = moves.stream()
+                            .filter((Move m) -> getBaseMoves(other, true)
+                                    .stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest()))
+                            .collect(Collectors.toList());
                 }
             // Check in between square for check if castling
             List<Move> kingMoves = moves;
@@ -590,7 +600,7 @@ public class GameLogic {
                     for (int direction = -1; direction <= 1; direction += 2) {
                         int distance = 1;
                         do {
-                            targetSquare =  board.getSquareByPieceOffset(piece, 0, direction * distance);
+                            targetSquare = board.getSquareByPieceOffset(piece, 0, direction * distance);
                             if (targetSquare == null)
                                 return true;
                             targetPiece = targetSquare.getOccupant();
@@ -606,11 +616,135 @@ public class GameLogic {
                             distance++;
                         } while (targetPiece == null);
                     }
-                    return !(rankSliderFound && kingFound);
+                    return !rankSliderFound || !kingFound;
                 }
                 return true;
             }).collect(Collectors.toList());
         }
         return moves;
+    }
+
+    public Move convertToMove(String notation){
+        boolean isCapture = false;
+        String startSquare, destSqaure;
+        int rank, file;
+        Piece piece;
+        Piece promotedPiece;
+        String lastChar;
+
+        if (notation.contains("O") ){
+            startSquare = notation.substring(1,3);
+            String castle = notation.substring(3);
+            piece = board.getSquareByNotation(startSquare).getOccupant();
+            if (castle.equals("O-O-O")){
+                return new CastleMove((King) piece, false);
+            }
+            else if (castle.equals("O-O")){
+                return new CastleMove((King)piece, true);
+            }
+        }
+
+        if (notation.contains("x")){
+            isCapture = true;
+            notation = notation.replace("x", "");
+        }
+
+        if (Character.isUpperCase(notation.charAt(0))){
+            notation = notation.substring(1);
+        }
+
+        startSquare = notation.substring(0,2);
+        destSqaure = notation.substring(2,4);
+
+        piece = board.getSquareByNotation(startSquare).getOccupant();
+
+        file = board.getSquareByNotation(destSqaure).getFile();
+        rank = board.getSquareByNotation(destSqaure).getRank();
+
+        if (notation.contains("=")){
+            lastChar = notation.substring(notation.length()-1);
+            promotedPiece = null;
+            if(lastChar.equals("R")){
+                promotedPiece = new Rook(rank, file, piece.isWhite());
+            }
+            if(lastChar.equals("N")){
+                promotedPiece = new Knight(rank, file, piece.isWhite());
+            }
+            if(lastChar.equals("B")){
+                promotedPiece = new Bishop(rank, file, piece.isWhite());
+            }
+            if(lastChar.equals("Q")){
+                promotedPiece = new Queen(rank, file, piece.isWhite());
+            }
+            return new PromoteMove((Pawn)piece, rank, file, isCapture, promotedPiece);
+        }
+
+        if (notation.contains("e.p.")){
+            return new EnPassantMove((Pawn)piece, rank, file);
+        }
+
+        return new RegularMove(piece, rank, file, isCapture);
+    }
+
+    public String convertToNotation(Move move){
+        Piece piece = move.getPiece();
+        String notation = "";
+
+        if (piece instanceof Rook){
+            notation += "R";
+        }
+        if (piece instanceof Knight){
+            notation += "N";
+        }
+        if (piece instanceof Bishop){
+            notation += "B";
+        }
+        if (piece instanceof Queen){
+            notation += "Q";
+        }
+        if (piece instanceof King){
+            notation += "K";
+        }
+
+        notation += (char) (97+piece.getFile());
+        notation += String.valueOf(piece.getRank()+1);
+
+        if (move instanceof CastleMove){
+            if (((CastleMove) move).isKingSide){
+                return notation + "O-O";
+            }else{
+                return notation + "O-O-O";
+            }
+        }
+
+        if (move.isCapture()){
+            notation += "x";
+        }
+
+        notation += (char) (97+move.getFileDest());
+        notation += String.valueOf(move.getRankDest()+1);
+
+        if (move instanceof PromoteMove){
+            notation += "=";
+            Piece promotedPiece = ((PromoteMove) move).promotePiece;
+            if (promotedPiece instanceof Rook){
+                notation += "R";
+            }
+            if (promotedPiece instanceof Knight){
+                notation += "N";
+            }
+            if (promotedPiece instanceof Bishop){
+                notation += "B";
+            }
+            if (promotedPiece instanceof Queen){
+                notation += "Q";
+            }
+        }
+
+        if (move instanceof EnPassantMove){
+            notation += "e.p.";
+        }
+
+        return notation;
     }
 }
