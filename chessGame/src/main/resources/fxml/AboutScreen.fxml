@@ -19,7 +19,7 @@
     </padding>
 
     <Text fx:id="screenTitle"
-          text="Chess"
+          text="About"
           GridPane.rowIndex="0"/>
 
     <HBox styleClass="buttonBox"
