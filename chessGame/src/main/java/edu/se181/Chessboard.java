@@ -46,7 +46,6 @@ public class Chessboard {
                     clicked[0] = GridPane.getRowIndex(square);
                     clicked[1] = GridPane.getColumnIndex(square);
                     move(clicked[1],clicked[0]);
-                    //selectedPiece = null;
                 });
                 square.getChildren().addAll(background);
                 chessBoard.add(square, col, row);
@@ -54,7 +53,6 @@ public class Chessboard {
         }
         setPieces(chessBoard);
         this.chessBoard = chessBoard;
-        //return chessBoard;
     }
 
 
@@ -66,16 +64,16 @@ public class Chessboard {
         Sprite blackBishop2 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_BISHOP()));
         Sprite blackRook1 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_ROOK()));
         Sprite blackRook2 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_ROOK()));
-        Sprite blackQueen = new Sprite(new Image(StringSources.INSTANCE.getBlACK_QUEEN()));
+        Sprite blackQueen = new Sprite(new Image(StringSources.INSTANCE.getBLACK_QUEEN()));
         Sprite blackKing = new Sprite(new Image(StringSources.INSTANCE.getBLACK_KING()));
-        Sprite blackPawn1 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
-        Sprite blackPawn2 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
-        Sprite blackPawn3 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
-        Sprite blackPawn4 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
-        Sprite blackPawn5 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
-        Sprite blackPawn6 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
-        Sprite blackPawn7 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
-        Sprite blackPawn8 = new Sprite(new Image(StringSources.INSTANCE.getBlACK_PAWN()));
+        Sprite blackPawn1 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
+        Sprite blackPawn2 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
+        Sprite blackPawn3 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
+        Sprite blackPawn4 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
+        Sprite blackPawn5 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
+        Sprite blackPawn6 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
+        Sprite blackPawn7 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
+        Sprite blackPawn8 = new Sprite(new Image(StringSources.INSTANCE.getBLACK_PAWN()));
 
         Sprite whiteKnight1 = new Sprite(new Image(StringSources.INSTANCE.getWHITE_KNIGHT()));
         Sprite whiteKnight2 = new Sprite(new Image(StringSources.INSTANCE.getWHITE_KNIGHT()));

@@ -11,7 +11,6 @@ public class GameStage {
 
         BorderPane layout = new BorderPane();
         Chessboard cb = new Chessboard();
-        //GridPane chessBoard = cb.createChessBoard();
         GridPane chessBoard = cb.chessBoard;
 
         chessBoard.setGridLinesVisible(true);
