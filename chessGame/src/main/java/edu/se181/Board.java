@@ -28,15 +28,6 @@ public class Board {
         blackPieces = new ArrayList<>();
     }
 
-    public void invertBoard() {
-        for (int rank = 0; rank < 8; rank++) {
-            for (int col = 0; col < 8; col++) {
-                squares[rank][col].setRank(rank);
-                squares[rank][col].setFile(7 - col);
-            }
-        }
-    }
-
     public void initialize() {
         // opposing nonpawns
         squares[0][0].setOccupant(new Rook(squares[0][0].getRank(), squares[0][0].getFile(), false));
@@ -100,35 +91,35 @@ public class Board {
                 if (piece.isWhite()){
                     blackPieces = blackPieces.stream()
                                     .filter(p ->
-                                            p.getFile() != move.getRankDest() && p.getRank() != move.getFileDest())
+                                            p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
                                     .collect(Collectors.toList());
                 }
                 else {
                     whitePieces = whitePieces.stream()
                             .filter(p ->
-                                    p.getFile() != move.getRankDest() && p.getRank() != move.getFileDest())
+                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
                             .collect(Collectors.toList());
                 }
             }
 
-            squares[piece.getRank()][piece.getFile()].setOccupant(null);
-            squares[move.getRankDest()][piece.getFile()].setOccupant(piece);
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][piece.getFile()].setOccupant(piece);
             //feels awkward that we still need to change piece position
         }
         else if (move instanceof CastleMove){
-            squares[piece.getRank()][piece.getFile()].setOccupant(null);
-            squares[move.getRankDest()][piece.getFile()].setOccupant(piece);
-
             Piece rook;
             if (((CastleMove) move).isKingSide){
-                rook = squares[piece.getRank()][7].getOccupant();
-                squares[piece.getRank()][7].setOccupant(null);
-                squares[piece.getRank()][piece.getFile()+1].setOccupant(rook);
+                rook = squares[7-piece.getRank()][7].getOccupant();
+                squares[7-piece.getRank()][7].setOccupant(null);
+                squares[7-piece.getRank()][piece.getFile()+1].setOccupant(rook);
             }else{
-                rook = squares[piece.getRank()][0].getOccupant();
-                squares[piece.getRank()][0].setOccupant(null);
-                squares[piece.getRank()][piece.getFile()-1].setOccupant(rook);
+                rook = squares[7-piece.getRank()][0].getOccupant();
+                squares[7-piece.getRank()][0].setOccupant(null);
+                squares[7-piece.getRank()][piece.getFile()-1].setOccupant(rook);
             }
+
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
         }
         else if (move instanceof PromoteMove){
             Piece promotedPiece = ((PromoteMove) move).promotePiece;
@@ -147,25 +138,29 @@ public class Board {
                 blackPieces.add(promotedPiece);
             }
 
-            squares[piece.getRank()][piece.getFile()].setOccupant(null);
-            squares[move.getRankDest()][move.getFileDest()].setOccupant(promotedPiece);
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(promotedPiece);
         }
         else if (move instanceof EnPassantMove){
             if (piece.isWhite()){
                 blackPieces = blackPieces.stream()
                         .filter(p ->
-                                p.getFile() != move.getRankDest()-1 && p.getRank() != move.getFileDest())
+                                p.getRank() != move.getRankDest()-1 && p.getFile() != move.getFileDest())
                         .collect(Collectors.toList());
+                squares[7-move.getRankDest()+1][move.getFileDest()].setOccupant(null);
             }
             else {
                 whitePieces = whitePieces.stream()
                         .filter(p ->
-                                p.getFile() != move.getRankDest()+1 && p.getRank() != move.getFileDest())
+                                p.getRank() != move.getRankDest()+1 && p.getFile() != move.getFileDest())
                         .collect(Collectors.toList());
+                squares[7-move.getRankDest()-1][move.getFileDest()].setOccupant(null);
             }
 
-            squares[piece.getRank()][piece.getFile()].setOccupant(null);
-            squares[move.getRankDest()][move.getFileDest()].setOccupant(piece);
+            squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
+
+
         }
     }
 
