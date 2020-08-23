@@ -10,7 +10,8 @@ public class GameStage {
     public static void launch() {
 
         BorderPane layout = new BorderPane();
-        GridPane chessBoard = Chessboard.createChessBoard();
+        Chessboard cb = new Chessboard();
+        GridPane chessBoard = cb.chessBoard;
 
         chessBoard.setGridLinesVisible(true);
         HBox top = new HBox();
