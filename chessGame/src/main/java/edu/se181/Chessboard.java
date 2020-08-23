@@ -18,6 +18,7 @@ public class Chessboard {
     public GridPane chessBoard;
     public ArrayList<Sprite> blackPieces = new ArrayList<>();
     public ArrayList<Sprite> whitePieces = new ArrayList<>();
+    private boolean whiteTurn = true;
 
     public Chessboard(){
         createChessBoard();
@@ -141,14 +142,33 @@ public class Chessboard {
     }
 
     public void move(int x, int y){
-        if(getSelectedPiece()==null){
+        if(getSelectedPiece()==null || (whiteTurn && blackPieces.contains((Sprite)getSelectedPiece())) ||
+                (!whiteTurn && whitePieces.contains((Sprite)getSelectedPiece()))){
             return ;
+        }
+        if(whiteTurn){
+            for(Sprite piece: blackPieces){
+                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
+                    remove(piece);
+                }
+            }
+        }
+        else{
+            for(Sprite piece: whitePieces){
+                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
+                    remove(piece);
+                }
+            }
         }
         //TODO Add check for legality here
         GridPane.setConstraints(getSelectedPiece(),x,y);
         setSelectedPiece(null);
+        whiteTurn = !whiteTurn;
     }
 
+    public void remove(ImageView piece){
+        chessBoard.getChildren().remove(piece);
+    }
 
     public void highlight(ImageView piece){
         int y = GridPane.getRowIndex(piece);
