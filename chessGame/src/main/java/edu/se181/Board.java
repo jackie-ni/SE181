@@ -104,6 +104,8 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][piece.getFile()].setOccupant(piece);
+
+            piece.firstMovePerformed();
         }
         else if (move instanceof CastleMove){
             Piece rook;
@@ -119,6 +121,9 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
+
+            piece.firstMovePerformed();
+            rook.firstMovePerformed();
         }
         else if (move instanceof PromoteMove){
             Piece promotedPiece = ((PromoteMove) move).promotePiece;
@@ -153,6 +158,8 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(promotedPiece);
+
+            promotedPiece.firstMovePerformed();
         }
         else if (move instanceof EnPassantMove){
             if (piece.isWhite()){
@@ -172,6 +179,8 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
+
+            piece.firstMovePerformed();
         }
     }
 
