@@ -77,6 +77,8 @@ public class BoardTest {
 
         Assert.assertEquals(boardSquares[6][0].getOccupant(), rook);
         Assert.assertNull(boardSquares[7][0].getOccupant());
+
+        Assert.assertTrue(rook.hasMoved());
     }
 
     @Test
@@ -100,6 +102,8 @@ public class BoardTest {
         Assert.assertNull(boardSquares[7][0].getOccupant());
 
         Assert.assertFalse(board.getBlackPieces().contains(enemyPiece));
+
+        Assert.assertTrue(rook.hasMoved());
     }
 
     @Test
@@ -123,6 +127,8 @@ public class BoardTest {
         Assert.assertNull(boardSquares[7][0].getOccupant());
 
         Assert.assertFalse(board.getWhitePieces().contains(enemyPiece));
+
+        Assert.assertTrue(rook.hasMoved());
     }
 
     @Test
@@ -143,6 +149,9 @@ public class BoardTest {
 
         Assert.assertEquals(boardSquares[7][5].getOccupant(), rook);
         Assert.assertNull(boardSquares[7][7].getOccupant());
+
+        Assert.assertTrue(king.hasMoved());
+        Assert.assertTrue(rook.hasMoved());
     }
 
     @Test
@@ -163,6 +172,9 @@ public class BoardTest {
 
         Assert.assertEquals(boardSquares[7][3].getOccupant(), rook);
         Assert.assertNull(boardSquares[7][0].getOccupant());
+
+        Assert.assertTrue(king.hasMoved());
+        Assert.assertTrue(rook.hasMoved());
     }
 
     @Test
@@ -184,6 +196,8 @@ public class BoardTest {
 
         Assert.assertFalse(board.getWhitePieces().contains(pawn));
         Assert.assertTrue(board.getWhitePieces().contains(promotedPiece));
+
+        Assert.assertTrue(promotedPiece.hasMoved());
     }
 
     @Test
@@ -205,6 +219,8 @@ public class BoardTest {
 
         Assert.assertFalse(board.getBlackPieces().contains(pawn));
         Assert.assertTrue(board.getBlackPieces().contains(promotedPiece));
+
+        Assert.assertTrue(promotedPiece.hasMoved());
     }
 
     @Test
@@ -230,6 +246,8 @@ public class BoardTest {
         Assert.assertFalse(board.getWhitePieces().contains(pawn));
         Assert.assertTrue(board.getWhitePieces().contains(promotedPiece));
         Assert.assertFalse(board.getBlackPieces().contains(enemyPiece));
+
+        Assert.assertTrue(promotedPiece.hasMoved());
     }
 
     @Test
@@ -255,6 +273,8 @@ public class BoardTest {
         Assert.assertFalse(board.getBlackPieces().contains(pawn));
         Assert.assertTrue(board.getBlackPieces().contains(promotedPiece));
         Assert.assertFalse(board.getWhitePieces().contains(enemyPiece));
+
+        Assert.assertTrue(promotedPiece.hasMoved());
     }
 
     @Test
@@ -279,6 +299,8 @@ public class BoardTest {
         Assert.assertNull(boardSquares[3][1].getOccupant());
 
         Assert.assertFalse(board.getBlackPieces().contains(enemyPawn));
+
+        Assert.assertTrue(pawn.hasMoved());
     }
 
     @Test
@@ -303,6 +325,8 @@ public class BoardTest {
         Assert.assertNull(boardSquares[4][1].getOccupant());
 
         Assert.assertFalse(board.getWhitePieces().contains(enemyPawn));
+
+        Assert.assertTrue(pawn.hasMoved());
     }
 
     @Test
