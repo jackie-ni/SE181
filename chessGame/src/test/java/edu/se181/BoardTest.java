@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoardTest {
     private Board board;
@@ -26,18 +27,6 @@ public class BoardTest {
         Assert.assertTrue(properSquares);
         Assert.assertTrue(board.getWhitePieces() instanceof ArrayList && board.getWhitePieces().size() == 0);
         Assert.assertTrue(board.getBlackPieces() instanceof ArrayList && board.getBlackPieces().size() == 0);
-    }
-
-    @Test
-    public void invertBoardTest() {
-        board.invertBoard();
-        boolean properSquares = true;
-        Square[][] boardSquares = board.getSquares();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                properSquares = properSquares && boardSquares[i][j].getRank() == i && boardSquares[i][j].getFile() == 7 - j;
-            }
-        }
     }
 
     @Test
@@ -73,6 +62,247 @@ public class BoardTest {
             }
         Assert.assertEquals(board.getWhitePieces().size(), 16);
         Assert.assertEquals(board.getBlackPieces().size(), 16);
+    }
+
+    @Test
+    public void makeMove_GivenRegularMoveAndNotCapture_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Piece rook = new Rook(0, 0, true);
+
+        boardSquares[7][0].setOccupant(rook);
+
+        Move move = new RegularMove(rook, 1, 0, false);
+
+        board.makeMove(move);
+
+        Assert.assertEquals(boardSquares[6][0].getOccupant(), rook);
+        Assert.assertNull(boardSquares[7][0].getOccupant());
+    }
+
+    @Test
+    public void makeMove_GivenRegularMoveAndCaptureAndWhite_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+
+        Piece rook = new Rook(0, 0, true);
+        Piece enemyPiece = new Rook(1, 0, false);
+
+        boardSquares[7][0].setOccupant(rook);
+        boardSquares[6][0].setOccupant(enemyPiece);
+
+        board.getWhitePieces().add(rook);
+        board.getBlackPieces().add(enemyPiece);
+
+        Move move = new RegularMove(rook, 1, 0, true);
+
+        board.makeMove(move);
+
+        Assert.assertEquals(boardSquares[6][0].getOccupant(), rook);
+        Assert.assertNull(boardSquares[7][0].getOccupant());
+
+        Assert.assertFalse(board.getBlackPieces().contains(enemyPiece));
+    }
+
+    @Test
+    public void makeMove_GivenRegularMoveAndCaptureAndBlack_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+
+        Piece rook = new Rook(0, 0, false);
+        Piece enemyPiece = new Rook(1, 0, true);
+
+        boardSquares[7][0].setOccupant(rook);
+        boardSquares[6][0].setOccupant(enemyPiece);
+
+        board.getWhitePieces().add(rook);
+        board.getBlackPieces().add(enemyPiece);
+
+        Move move = new RegularMove(rook, 1, 0, true);
+
+        board.makeMove(move);
+
+        Assert.assertEquals(boardSquares[6][0].getOccupant(), rook);
+        Assert.assertNull(boardSquares[7][0].getOccupant());
+
+        Assert.assertFalse(board.getWhitePieces().contains(enemyPiece));
+    }
+
+    @Test
+    public void makeMove_GivenCastleMoveAndKingSide_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        King king = new King(0, 4, true);
+        Piece rook = new Rook(0, 7, true);
+
+        boardSquares[7][4].setOccupant(king);
+        boardSquares[7][7].setOccupant(rook);
+
+        Move move = new CastleMove(king, true);
+
+        board.makeMove(move);
+
+        Assert.assertEquals(boardSquares[7][6].getOccupant(), king);
+        Assert.assertNull(boardSquares[7][4].getOccupant());
+
+        Assert.assertEquals(boardSquares[7][5].getOccupant(), rook);
+        Assert.assertNull(boardSquares[7][7].getOccupant());
+    }
+
+    @Test
+    public void makeMove_GivenCastleMoveAndQueenSide_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        King king = new King(0, 4, true);
+        Piece rook = new Rook(0, 0, true);
+
+        boardSquares[7][4].setOccupant(king);
+        boardSquares[7][0].setOccupant(rook);
+
+        Move move = new CastleMove(king, false);
+
+        board.makeMove(move);
+
+        Assert.assertEquals(boardSquares[7][2].getOccupant(), king);
+        Assert.assertNull(boardSquares[7][4].getOccupant());
+
+        Assert.assertEquals(boardSquares[7][3].getOccupant(), rook);
+        Assert.assertNull(boardSquares[7][0].getOccupant());
+    }
+
+    @Test
+    public void makeMove_GivenPromoteMoveAndNotCaptureAndWhite_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(6, 0, true);
+        Piece promotedPiece = new Queen(7,0, true);
+
+        boardSquares[1][0].setOccupant(pawn);
+
+        board.getWhitePieces().add(pawn);
+
+        Move move = new PromoteMove(pawn, 7, 0, false, promotedPiece);
+
+        board.makeMove(move);
+
+        Assert.assertNull(boardSquares[1][0].getOccupant());
+        Assert.assertEquals(boardSquares[0][0].getOccupant(), promotedPiece);
+
+        Assert.assertFalse(board.getWhitePieces().contains(pawn));
+        Assert.assertTrue(board.getWhitePieces().contains(promotedPiece));
+    }
+
+    @Test
+    public void makeMove_GivenPromoteMoveAndNotCaptureAndBlack_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(1, 0, false);
+        Piece promotedPiece = new Queen(0,0, false);
+
+        boardSquares[6][0].setOccupant(pawn);
+
+        board.getBlackPieces().add(pawn);
+
+        Move move = new PromoteMove(pawn, 0, 0, false, promotedPiece);
+
+        board.makeMove(move);
+
+        Assert.assertNull(boardSquares[6][0].getOccupant());
+        Assert.assertEquals(boardSquares[7][0].getOccupant(), promotedPiece);
+
+        Assert.assertFalse(board.getBlackPieces().contains(pawn));
+        Assert.assertTrue(board.getBlackPieces().contains(promotedPiece));
+    }
+
+    @Test
+    public void makeMove_GivenPromoteMoveAndCaptureAndWhite_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(6, 0, true);
+        Piece promotedPiece = new Queen(7,1, true);
+        Piece enemyPiece = new Rook(7, 1, false);
+
+        boardSquares[1][0].setOccupant(pawn);
+        boardSquares[0][1].setOccupant(enemyPiece);
+
+        board.getWhitePieces().add(pawn);
+        board.getBlackPieces().add(enemyPiece);
+
+        Move move = new PromoteMove(pawn, 7, 1, true, promotedPiece);
+
+        board.makeMove(move);
+
+        Assert.assertNull(boardSquares[1][0].getOccupant());
+        Assert.assertEquals(boardSquares[0][1].getOccupant(), promotedPiece);
+
+        Assert.assertFalse(board.getWhitePieces().contains(pawn));
+        Assert.assertTrue(board.getWhitePieces().contains(promotedPiece));
+        Assert.assertFalse(board.getBlackPieces().contains(enemyPiece));
+    }
+
+    @Test
+    public void makeMove_GivenPromoteMoveAndCaptureAndBlack_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(1, 0, false);
+        Piece promotedPiece = new Queen(0,1, false);
+        Piece enemyPiece = new Rook(0, 1, true);
+
+        boardSquares[6][0].setOccupant(pawn);
+        boardSquares[7][1].setOccupant(enemyPiece);
+
+        board.getBlackPieces().add(pawn);
+        board.getWhitePieces().add(enemyPiece);
+
+        Move move = new PromoteMove(pawn, 0, 1, true, promotedPiece);
+
+        board.makeMove(move);
+
+        Assert.assertNull(boardSquares[6][0].getOccupant());
+        Assert.assertEquals(boardSquares[7][1].getOccupant(), promotedPiece);
+
+        Assert.assertFalse(board.getBlackPieces().contains(pawn));
+        Assert.assertTrue(board.getBlackPieces().contains(promotedPiece));
+        Assert.assertFalse(board.getWhitePieces().contains(enemyPiece));
+    }
+
+    @Test
+    public void makeMove_GivenEnPassantMoveAndWhite_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(4, 0, true);
+        Piece enemyPawn = new Pawn(4,1, false);
+
+        boardSquares[3][0].setOccupant(pawn);
+        boardSquares[3][1].setOccupant(enemyPawn);
+
+        board.getWhitePieces().add(pawn);
+        board.getBlackPieces().add(enemyPawn);
+
+        Move move = new EnPassantMove(pawn, 5, 1);
+
+        board.makeMove(move);
+
+        Assert.assertNull(boardSquares[3][0].getOccupant());
+        Assert.assertEquals(boardSquares[2][1].getOccupant(), pawn);
+
+        Assert.assertNull(boardSquares[3][1].getOccupant());
+
+        Assert.assertFalse(board.getBlackPieces().contains(enemyPawn));
+    }
+
+    @Test
+    public void makeMove_GivenEnPassantMoveAndBlack_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(3, 0, false);
+        Piece enemyPawn = new Pawn(3,1, true);
+
+        boardSquares[4][0].setOccupant(pawn);
+        boardSquares[4][1].setOccupant(enemyPawn);
+
+        board.getWhitePieces().add(pawn);
+        board.getBlackPieces().add(enemyPawn);
+
+        Move move = new EnPassantMove(pawn, 2, 1);
+
+        board.makeMove(move);
+
+        Assert.assertNull(boardSquares[4][0].getOccupant());
+        Assert.assertEquals(boardSquares[5][1].getOccupant(), pawn);
+
+        Assert.assertNull(boardSquares[4][1].getOccupant());
+
+        Assert.assertFalse(board.getWhitePieces().contains(enemyPawn));
     }
 
     @Test
