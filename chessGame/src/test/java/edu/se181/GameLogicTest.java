@@ -25,6 +25,8 @@ public class GameLogicTest {
         Assert.assertEquals(result.getPiece(), expectedResult.getPiece());
         Assert.assertEquals(result.getFileDest(), expectedResult.getFileDest());
         Assert.assertEquals(result.getRankDest(), expectedResult.getRankDest());
+        Assert.assertTrue(result instanceof CastleMove);
+        Assert.assertTrue(((CastleMove) result).isKingSide);
     }
 
     @Test
@@ -38,6 +40,8 @@ public class GameLogicTest {
         Assert.assertEquals(result.getPiece(), expectedResult.getPiece());
         Assert.assertEquals(result.getFileDest(), expectedResult.getFileDest());
         Assert.assertEquals(result.getRankDest(), expectedResult.getRankDest());
+        Assert.assertTrue(result instanceof CastleMove);
+        Assert.assertFalse(((CastleMove) result).isKingSide);
     }
 
     @Test
@@ -52,6 +56,8 @@ public class GameLogicTest {
         Assert.assertEquals(result.getPiece(), expectedResult.getPiece());
         Assert.assertEquals(result.getFileDest(), expectedResult.getFileDest());
         Assert.assertEquals(result.getRankDest(), expectedResult.getRankDest());
+        Assert.assertTrue(result instanceof RegularMove);
+        Assert.assertTrue(result.isCapture());
     }
 
     @Test
@@ -66,6 +72,8 @@ public class GameLogicTest {
         Assert.assertEquals(result.getPiece(), expectedResult.getPiece());
         Assert.assertEquals(result.getFileDest(), expectedResult.getFileDest());
         Assert.assertEquals(result.getRankDest(), expectedResult.getRankDest());
+        Assert.assertTrue(result instanceof RegularMove);
+        Assert.assertFalse(result.isCapture());
     }
 
     @Test
@@ -81,6 +89,8 @@ public class GameLogicTest {
         Assert.assertEquals(result.getPiece(), expectedResult.getPiece());
         Assert.assertEquals(result.getFileDest(), expectedResult.getFileDest());
         Assert.assertEquals(result.getRankDest(), expectedResult.getRankDest());
+        Assert.assertTrue(result instanceof PromoteMove);
+        Assert.assertEquals(((PromoteMove) result).getPromotePiece(), promotedPiece);
     }
 
     @Test
@@ -95,6 +105,7 @@ public class GameLogicTest {
         Assert.assertEquals(result.getPiece(), expectedResult.getPiece());
         Assert.assertEquals(result.getFileDest(), expectedResult.getFileDest());
         Assert.assertEquals(result.getRankDest(), expectedResult.getRankDest());
+        Assert.assertTrue(result instanceof EnPassantMove);
     }
 
     @Test
