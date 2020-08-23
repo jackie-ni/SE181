@@ -1,32 +1,44 @@
 package edu.se181;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
 
+//Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
-    private static final String CHESS_GAME = "Chess Game";
-    public static void launch(Stage stage) {
-        stage.setTitle(CHESS_GAME);
 
-        GridPane chessBoard = new GridPane();
+    public static void launch() {
 
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                Rectangle square = new Rectangle(50, 50);
+        BorderPane layout = new BorderPane();
+        GridPane chessBoard = Chessboard.createChessBoard();
 
-                Color color = Color.GRAY;
-                if ((row + col) % 2 == 0) {
-                    color = Color.BEIGE;
-                }
-                square.setFill(color);
-                chessBoard.add(square, col, row);
-            }
-        }
-        Scene scene = new Scene(chessBoard, 500, 500);
-        stage.setScene(scene);
-        stage.show();
+        chessBoard.setGridLinesVisible(true);
+        HBox top = new HBox();
+        HBox bottom = new HBox(20);
+        VBox left = new VBox();
+        VBox right = new VBox();
+
+        left.setPrefHeight(600);
+        left.setPrefWidth(100);
+        right.setPrefHeight(600);
+        right.setPrefWidth(100);
+        top.setPrefHeight(100);
+        top.setPrefWidth(600);
+        bottom.setPrefHeight(100);
+        bottom.setPrefWidth(600);
+
+        layout.setCenter(chessBoard);
+        layout.setTop(top);
+        layout.setBottom(bottom);
+        layout.setLeft(left);
+        layout.setRight(right);
+
+        //TODO: Implement Surrender/Draw button functions
+        Button surrender = new Button("Surrender");
+        Button draw = new Button("Draw");
+        bottom.setAlignment(Pos.CENTER);
+        bottom.getChildren().addAll(surrender, draw);
+
+        MainApp.Companion.updateStage(layout);
     }
 }
