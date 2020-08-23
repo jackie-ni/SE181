@@ -96,16 +96,16 @@ public class GameLogic {
     }
 
     protected boolean hasLegalMove(boolean white) {
-        boolean hasMove = false;
         List<Piece> pieces;
         if (white)
             pieces = board.getWhitePieces();
         else
             pieces = board.getBlackPieces();
         for (Piece piece : pieces) {
-            hasMove = hasMove || getLegalMoves(piece).size() > 0;
+            if (getLegalMoves(piece).size() > 0)
+                return true;
         }
-        return hasMove;
+        return false;
     }
 
     protected void determinePins(boolean lastMoveWhite) {
