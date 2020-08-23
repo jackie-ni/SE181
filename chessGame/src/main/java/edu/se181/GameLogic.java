@@ -58,16 +58,16 @@ public class GameLogic {
         if (notation.contains("=")){
             lastChar = notation.substring(notation.length()-1);
             promotedPiece = null;
-            if(lastChar == "R"){
+            if(lastChar.equals("R")){
                 promotedPiece = new Rook(rank, file, piece.isWhite());
             }
-            if(lastChar == "N"){
+            if(lastChar.equals("N")){
                 promotedPiece = new Knight(rank, file, piece.isWhite());
             }
-            if(lastChar == "B"){
+            if(lastChar.equals("B")){
                 promotedPiece = new Bishop(rank, file, piece.isWhite());
             }
-            if(lastChar == "Q"){
+            if(lastChar.equals("Q")){
                 promotedPiece = new Queen(rank, file, piece.isWhite());
             }
             return new PromoteMove((Pawn)piece, rank, file, promotedPiece);

@@ -90,7 +90,9 @@ public class GameLogicTest {
         Assert.assertEquals(result.getFileDest(), expectedResult.getFileDest());
         Assert.assertEquals(result.getRankDest(), expectedResult.getRankDest());
         Assert.assertTrue(result instanceof PromoteMove);
-        Assert.assertEquals(((PromoteMove) result).getPromotePiece(), promotedPiece);
+        Assert.assertTrue(((PromoteMove) result).getPromotePiece() instanceof Queen);
+        Assert.assertEquals(((PromoteMove) result).getPromotePiece().getFile(), promotedPiece.getFile());
+        Assert.assertEquals(((PromoteMove) result).getPromotePiece().getRank(), promotedPiece.getRank());
     }
 
     @Test
