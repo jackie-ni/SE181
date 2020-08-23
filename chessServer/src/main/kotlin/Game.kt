@@ -1,7 +1,7 @@
 import io.javalin.websocket.WsContext
 
-data class Game @JvmOverloads constructor(
-    val private: Boolean,
+data class Game (
+    val private: Boolean = false,
     var gameId: String = "",
     var players: Int = 0,
     private val password: String = ""
