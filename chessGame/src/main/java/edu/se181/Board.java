@@ -104,7 +104,6 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][piece.getFile()].setOccupant(piece);
-            //feels awkward that we still need to change piece position
         }
         else if (move instanceof CastleMove){
             Piece rook;
@@ -123,6 +122,20 @@ public class Board {
         }
         else if (move instanceof PromoteMove){
             Piece promotedPiece = ((PromoteMove) move).promotePiece;
+            if (move.isCapture()){
+                if (piece.isWhite()){
+                    blackPieces = blackPieces.stream()
+                            .filter(p ->
+                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                            .collect(Collectors.toList());
+                }
+                else {
+                    whitePieces = whitePieces.stream()
+                            .filter(p ->
+                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                            .collect(Collectors.toList());
+                }
+            }
             if (piece.isWhite()){
                 whitePieces = whitePieces.stream()
                         .filter(p ->
@@ -159,8 +172,6 @@ public class Board {
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
-
-
         }
     }
 
@@ -222,6 +233,8 @@ public class Board {
             Piece newPiece;
             if (pieceChar == 'P') {
                 newPiece = new Pawn(rank, file, true);
+                if (rank != 1)
+                    newPiece.firstMovePerformed();
             } else if (pieceChar == 'N') {
                 newPiece = new Knight(rank, file, true);
             } else if (pieceChar == 'B') {
@@ -234,6 +247,8 @@ public class Board {
                 newPiece = new King(rank, file, true);
             } else if (pieceChar == 'p') {
                 newPiece = new Pawn(rank, file, false);
+                if (rank != 6)
+                    newPiece.firstMovePerformed();
             } else if (pieceChar == 'n') {
                 newPiece = new Knight(rank, file, false);
             } else if (pieceChar == 'b') {
