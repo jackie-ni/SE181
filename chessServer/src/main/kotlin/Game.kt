@@ -1,10 +1,11 @@
 import io.javalin.websocket.WsContext
 
 data class Game (
-    val private: Boolean = false,
-    var gameId: String = "",
-    var players: Int = 0,
-    private val password: String = ""
+        var name: String,
+        val private: Boolean = false,
+        var gameId: String = "",
+        var players: Int = 0,
+        private val password: String = ""
     ) {
 
     private val playerMap = hashMapOf<WsContext, String>()
