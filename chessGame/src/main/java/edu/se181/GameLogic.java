@@ -45,11 +45,11 @@ public class GameLogic {
         }
     }
 
-    public void evaluateDrawConditionsExceptStalemate() {
+    protected void evaluateDrawConditionsExceptStalemate() {
         // TODO: Implement in issue 30
     }
 
-    public void findChecks(boolean lastMoveWhite) {
+    protected void findChecks(boolean lastMoveWhite) {
         checkState = 0;
         checkSquares.clear();
 
@@ -95,7 +95,7 @@ public class GameLogic {
         }
     }
 
-    public boolean hasLegalMove(boolean white) {
+    protected boolean hasLegalMove(boolean white) {
         boolean hasMove = false;
         List<Piece> pieces;
         if (white)
@@ -108,7 +108,7 @@ public class GameLogic {
         return hasMove;
     }
 
-    public void determinePins(boolean lastMoveWhite) {
+    protected void determinePins(boolean lastMoveWhite) {
         List<Piece> enemyPieces;
         King king;
         if (lastMoveWhite) {

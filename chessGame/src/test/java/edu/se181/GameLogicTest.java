@@ -36,7 +36,7 @@ public class GameLogicTest {
     @Test
     public void findChecks_NoChecks() {
         gameLogic.getBoard().loadBoard("00000000000k000r000000000000000000000000000000000K00000000000000000000");
-        // https://lichess.org/editor/5k2/1r6/8/8/8/3K4/5Q2/8_b_-_-_0_1
+        // https://lichess.org/editor/5k2/1r6/8/8/8/3K4/8/8_b_-_-_0_1
         gameLogic.findChecks(true);
         Assert.assertEquals(0, gameLogic.checkState);
         Assert.assertEquals(0, gameLogic.checkSquares.size());
@@ -323,7 +323,7 @@ public class GameLogicTest {
 
         Assert.assertEquals(result, "a5xb6e.p.");
     }
-    
+
     // getBaseMoves Tests
 
     @Test
