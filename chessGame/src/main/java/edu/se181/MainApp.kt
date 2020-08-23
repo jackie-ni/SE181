@@ -26,6 +26,10 @@ class MainApp : Application() {
             stage.scene.root = newRoot
         }
 
+        fun returnObjectFromScene(id: String): Any {
+            return stage.scene.lookup(id)
+        }
+
         fun exitApp() {
             stage.close()
         }
