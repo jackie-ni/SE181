@@ -12,12 +12,18 @@ import java.util.Arrays;
 //Visual creation of the chessboard
 public class Chessboard {
 
+    final int[] original = {0,0};
     final int[] clicked = {0,0};    //row,col in GridPane (chessboard) where user clicked
 
     public ImageView selectedPiece = null;
     public GridPane chessBoard;
     public ArrayList<Sprite> blackPieces = new ArrayList<>();
     public ArrayList<Sprite> whitePieces = new ArrayList<>();
+    public ArrayList<Sprite> capturedWhitePieces = new ArrayList<>();
+    public ArrayList<Sprite> capturedBlackPieces = new ArrayList<>();
+    public CaptureBox whiteCaptured = new CaptureBox();
+    public CaptureBox blackCaptured = new CaptureBox();
+    private boolean whiteTurn = true;
 
     public Chessboard(){
         createChessBoard();
@@ -28,6 +34,12 @@ public class Chessboard {
     }
     public ImageView getSelectedPiece(){
         return this.selectedPiece;
+    }
+    public ArrayList<Sprite> getCapturedWhitePieces(){
+        return this.capturedWhitePieces;
+    }
+    public ArrayList<Sprite> getCapturedBlackPieces(){
+        return this.capturedBlackPieces;
     }
 
     public void createChessBoard() {
@@ -141,14 +153,41 @@ public class Chessboard {
     }
 
     public void move(int x, int y){
-        if(getSelectedPiece()==null){
+        if(getSelectedPiece()==null || (whiteTurn && blackPieces.contains(getSelectedPiece())) ||
+                (!whiteTurn && whitePieces.contains(getSelectedPiece()))){
             return ;
+        }
+        if(whiteTurn){
+            for(Sprite piece: blackPieces){
+                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
+                    remove(piece);
+                }
+            }
+        }
+        else{
+            for(Sprite piece: whitePieces){
+                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
+                    remove(piece);
+                }
+            }
         }
         //TODO Add check for legality here
         GridPane.setConstraints(getSelectedPiece(),x,y);
         setSelectedPiece(null);
+        whiteTurn = !whiteTurn;
     }
 
+    public void remove(Sprite piece){
+        chessBoard.getChildren().remove(piece);
+        if(whiteTurn){
+            capturedBlackPieces.add(piece);
+            blackCaptured.showPiece(piece);
+        }
+        else{
+            capturedWhitePieces.add(piece);
+            whiteCaptured.showPiece(piece);
+        }
+    }
 
     public void highlight(ImageView piece){
         int y = GridPane.getRowIndex(piece);
@@ -162,6 +201,5 @@ public class Chessboard {
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         chessBoard.add(newSquare,x,y);
     }
-
 
 }
