@@ -3,30 +3,38 @@ package edu.se181;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+
+import java.util.ArrayList;
 
 //Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
+    public static ArrayList<Sprite> capturedWhitePieces;
+    public static ArrayList<Sprite> capturedBlackPieces;
+    public static HBox top, bottom;
+    public static CaptureBox left, right;
 
     public static void launch() {
-
         BorderPane layout = new BorderPane();
         Chessboard cb = new Chessboard();
         GridPane chessBoard = cb.chessBoard;
+        capturedWhitePieces = cb.getCapturedWhitePieces();
+        capturedBlackPieces = cb.blackPieces;
 
         chessBoard.setGridLinesVisible(true);
-        HBox top = new HBox();
-        HBox bottom = new HBox(20);
-        VBox left = new VBox();
-        VBox right = new VBox();
+        top = new HBox();
+        bottom = new HBox(20);
+        left = cb.whiteCaptured;
+        right = cb.blackCaptured;
 
-        left.setPrefHeight(600);
-        left.setPrefWidth(100);
-        right.setPrefHeight(600);
-        right.setPrefWidth(100);
-        top.setPrefHeight(100);
-        top.setPrefWidth(600);
-        bottom.setPrefHeight(100);
-        bottom.setPrefWidth(600);
+        left.setPrefSize(100,600);
+        right.setPrefSize(100,600);
+        top.setPrefSize(600,100);
+        bottom.setPrefSize(600,100);
+
+//        for(Sprite pieces: capturedBlackPieces){
+//            right.getChildren().add(pieces);
+//        }
 
         layout.setCenter(chessBoard);
         layout.setTop(top);
@@ -42,4 +50,5 @@ public class GameStage {
 
         MainApp.Companion.updateStage(layout);
     }
+
 }
