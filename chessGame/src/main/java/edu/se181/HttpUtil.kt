@@ -54,7 +54,10 @@ object HttpUtil {
     }
 
     fun deleteGame() {
-        wsClient.close()
+        if (this::wsClient.isInitialized) {
+            wsClient.close()
+        }
+
         val request = HttpRequest.newBuilder()
                 .uri(URI.create("$GAMES_URL/$connectedGame"))
                 .DELETE()
