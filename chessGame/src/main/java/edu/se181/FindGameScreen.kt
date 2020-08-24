@@ -66,7 +66,7 @@ class FindGameScreen {
                 } else {
                     val joinGame = FindGameSceenDialogs.joinGameDialog()
                     if (joinGame == YES) {
-                        GameStage.launch()
+                        //join game
                     }
                 }
             }
