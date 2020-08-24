@@ -148,10 +148,10 @@ public class Chessboard {
         }
 
         for(Sprite sprites: blackPieces){
-            sprites.setPosition(GridPane.getRowIndex(sprites),GridPane.getColumnIndex(sprites));
+            sprites.setPosition(GridPane.getColumnIndex(sprites),GridPane.getRowIndex(sprites));
             sprites.setOnMouseClicked(e->{
                 if(whiteTurn && whitePieces.contains(getSelectedPiece())){
-                    move(sprites.getYPos(),sprites.getXPos());
+                    move(sprites.getXPos(),sprites.getYPos());
                 }
                 else if (!whiteTurn){
                     setSelectedPiece(sprites);
@@ -161,10 +161,10 @@ public class Chessboard {
             });
         }
         for(Sprite sprites: whitePieces){
-            sprites.setPosition(GridPane.getRowIndex(sprites),GridPane.getColumnIndex(sprites));
+            sprites.setPosition(GridPane.getColumnIndex(sprites),GridPane.getRowIndex(sprites));
             sprites.setOnMouseClicked(e->{
                 if(!whiteTurn && blackPieces.contains(getSelectedPiece())){
-                    move(sprites.getYPos(),sprites.getXPos());
+                    move(sprites.getXPos(),sprites.getYPos());
                 }
                 else if (whiteTurn){
                     setSelectedPiece(sprites);
@@ -201,11 +201,19 @@ public class Chessboard {
                 }
             }
         }
-        //TODO Add check for legality here
         Move move = getSelectedLegalMoves().stream().filter((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x).collect(Collectors.toList()).get(0);
+        if (move instanceof EnPassantMove) {
+            if (whiteTurn) {
+                Sprite pawn = blackPieces.stream().filter((Sprite s) -> s.getXPos() == x && s.getYPos() == y + 1).collect(Collectors.toList()).get(0);
+                remove(pawn);
+            } else {
+                Sprite pawn = whitePieces.stream().filter((Sprite s) -> s.getXPos() == x && s.getYPos() == y - 1).collect(Collectors.toList()).get(0);
+                remove(pawn);
+            }
+        }
         game.makeMove(move);
         GridPane.setConstraints(getSelectedPiece(), x, y);
-        getSelectedPiece().setPosition(y, x);
+        getSelectedPiece().setPosition(x, y);
         setSelectedPiece(null);
         getSelectedLegalMoves().clear();
         whiteTurn = !whiteTurn;
@@ -237,7 +245,7 @@ public class Chessboard {
     }
 
     public List<Move> getLegalMoves(Sprite sprite){
-        List<Move> moves = game.getLegalMoves(7-sprite.getXPos(),sprite.getYPos());
+        List<Move> moves = game.getLegalMoves(7-sprite.getYPos(),sprite.getXPos());
         if (moves.isEmpty())
             System.out.println("No moves"); // debug
         for(Move m : moves) {
