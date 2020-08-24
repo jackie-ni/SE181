@@ -33,8 +33,13 @@ public class Chessboard {
     public CaptureBox whiteCaptured = new CaptureBox();
     public CaptureBox blackCaptured = new CaptureBox();
     private boolean whiteTurn = true;
+<<<<<<< HEAD
     private boolean playerIsWhite;
     private Game game;
+=======
+    private boolean white = false;
+    private Game game = new Game();
+>>>>>>> master
 
     public Chessboard(boolean white){
         game = new Game(white);
@@ -168,7 +173,7 @@ public class Chessboard {
         }
         board.getChildren().addAll(blackPieces);
         board.getChildren().addAll(whitePieces);
-        if(!playerIsWhite){
+        if(!white){
             board.setRotate(180);
             for(Sprite s: whitePieces){
                 s.setRotate(180);
@@ -429,8 +434,6 @@ public class Chessboard {
     }
 
     public void highlightSquare(int x, int y){
-        if (playerIsWhite != whiteTurn)
-            return;
         List<Node> nodes = chessBoard.getChildren().filtered((Node s)->
                 s instanceof StackPane &&
                         GridPane.getColumnIndex(s)==x &&
