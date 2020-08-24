@@ -33,16 +33,16 @@ public class DrawChecker {
             return false;
         }
         for(int i = irreversibleMoveIndex; i < boardStateList.size(); i++){
-            boardState = boardStateList.get(i);
+            boardState = boardStateList.get(i).substring(2);
             checkWhite = i  % 2 == 0;
 
             if (checkWhite){
-                whiteBoardStateMap = updateHashMap(whiteBoardStateMap, boardState);
+                updateHashMap(whiteBoardStateMap, boardState);
                 if (whiteBoardStateMap.get(boardState) == 3){
                     return true;
                 }
             }else{
-                blackBoardStateMap = updateHashMap(blackBoardStateMap, boardState);
+                updateHashMap(blackBoardStateMap, boardState);
                 if (blackBoardStateMap.get(boardState) == 3){
                     return true;
                 }
@@ -51,14 +51,13 @@ public class DrawChecker {
         return false;
     }
 
-    private static HashMap<String, Integer> updateHashMap(HashMap<String, Integer> hashMap, String boardState){
+    private static void updateHashMap(HashMap<String, Integer> hashMap, String boardState){
         if (hashMap.containsKey(boardState)){
             hashMap.replace(boardState, hashMap.get(boardState)+1);
         }
         else{
             hashMap.put(boardState, 1);
         }
-        return hashMap;
     }
 
     public static boolean isDeadPosition(Board board){
