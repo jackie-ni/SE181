@@ -259,67 +259,90 @@ public class Chessboard {
         }
 
         if (move instanceof PromoteMove) {
-            List<String> promotePieces = new ArrayList<>();
-            String promotePieceString;
-            promotePieces.add("Queen");
-            promotePieces.add("Rook");
-            promotePieces.add("Bishop");
-            promotePieces.add("Knight");
-            ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(promotePieces.get(0), promotePieces);
-            choiceDialog.setTitle("Pawn Promotion");
-            choiceDialog.setHeaderText("Select piece to promote pawn to");
-            Optional<String> result = choiceDialog.showAndWait();
-            if (result.isPresent()) {
-                promotePieceString = result.get();
+            Sprite promotePieceSprite;
+            if (((PromoteMove) move).getPromotePiece() == null) {
+                List<String> promotePieces = new ArrayList<>();
+                String promotePieceString;
+                promotePieces.add("Queen");
+                promotePieces.add("Rook");
+                promotePieces.add("Bishop");
+                promotePieces.add("Knight");
+                ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(promotePieces.get(0), promotePieces);
+                choiceDialog.setTitle("Pawn Promotion");
+                choiceDialog.setHeaderText("Select piece to promote pawn to");
+                Optional<String> result = choiceDialog.showAndWait();
+                if (result.isPresent()) {
+                    promotePieceString = result.get();
+                } else {
+                    setSelectedPiece(null);
+                    getSelectedLegalMoves().clear();
+                    return;
+                }
+                int pieceType = -1;
+                for (int i = 0; i < promotePieces.size(); i++) {
+                    if (promotePieces.get(i).equals(promotePieceString)) {
+                        pieceType = i;
+                        break;
+                    }
+                }
+                Piece promotePiece;
+                if (pieceType == 0) {
+                    promotePiece = new Queen(move.getRankDest(), move.getFileDest(), whiteTurn);
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_QUEEN()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_QUEEN()));
+                } else if (pieceType == 1) {
+                    promotePiece = new Rook(move.getRankDest(), move.getFileDest(), whiteTurn);
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_ROOK()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_ROOK()));
+                } else if (pieceType == 2) {
+                    promotePiece = new Bishop(move.getRankDest(), move.getFileDest(), whiteTurn);
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_BISHOP()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_BISHOP()));
+                } else {
+                    promotePiece = new Knight(move.getRankDest(), move.getFileDest(), whiteTurn);
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_KNIGHT()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_KNIGHT()));
+                }
+                ((PromoteMove) move).setPromotePiece(promotePiece);
             } else {
-                setSelectedPiece(null);
-                getSelectedLegalMoves().clear();
-                return;
-            }
-            int pieceType = -1;
-            for (int i = 0; i < promotePieces.size(); i++) {
-                if (promotePieces.get(i).equals(promotePieceString)) {
-                    pieceType = i;
-                    break;
+                Piece promotePiece = ((PromoteMove) move).getPromotePiece();
+                if (promotePiece instanceof Queen) {
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_QUEEN()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_QUEEN()));
+                } else if (promotePiece instanceof Rook) {
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_ROOK()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_ROOK()));
+                } else if (promotePiece instanceof Bishop) {
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_BISHOP()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_BISHOP()));
+                } else {
+                    if (whiteTurn)
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_KNIGHT()));
+                    else
+                        promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_KNIGHT()));
                 }
             }
-            Piece promotePiece;
-            Sprite promotePieceSprite;
-            if (pieceType == 0) {
-                promotePiece = new Queen(move.getRankDest(), move.getFileDest(), whiteTurn);
-                if (whiteTurn)
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_QUEEN()));
-                else
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_QUEEN()));
-            } else if (pieceType == 1) {
-                promotePiece = new Rook(move.getRankDest(), move.getFileDest(), whiteTurn);
-                if (whiteTurn)
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_ROOK()));
-                else
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_ROOK()));
-            } else if (pieceType == 2) {
-                promotePiece = new Bishop(move.getRankDest(), move.getFileDest(), whiteTurn);
-                if (whiteTurn)
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_BISHOP()));
-                else
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_BISHOP()));
-            } else {
-                promotePiece = new Knight(move.getRankDest(), move.getFileDest(), whiteTurn);
-                if (whiteTurn)
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_KNIGHT()));
-                else
-                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_KNIGHT()));
-            }
-            ((PromoteMove) move).setPromotePiece(promotePiece);
             GridPane.setConstraints(promotePieceSprite, move.getFileDest(), 7 - move.getRankDest());
             if (whiteTurn) {
                 whitePieces.remove(getSelectedPiece());
                 whitePieces.add(promotePieceSprite);
-                System.out.println("setting event handler");
             } else {
                 blackPieces.remove(getSelectedPiece());
                 blackPieces.add(promotePieceSprite);
-                System.out.println("setting event handler");
             }
             addHandler(promotePieceSprite, whiteTurn);
             chessBoard.getChildren().remove(getSelectedPiece());
