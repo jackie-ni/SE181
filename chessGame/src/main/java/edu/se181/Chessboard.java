@@ -1,5 +1,6 @@
 package edu.se181;
 
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -204,6 +205,38 @@ public class Chessboard {
         //TODO Add check for legality here
         Move move = getSelectedLegalMoves().stream().filter((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x).collect(Collectors.toList()).get(0);
         game.makeMove(move);
+
+        if(move instanceof CastleMove){
+            //move rook
+            if(((CastleMove) move).isKingSide){
+                if(whiteTurn) {
+                    Sprite rook = whitePieces.get(7);
+                    GridPane.setConstraints(rook,5,7);
+                    rook.setPosition(5,7);
+                }
+                else{
+                    Sprite rook = blackPieces.get(7);
+                    GridPane.setConstraints(rook,5,0);
+                    rook.setPosition(5,0);
+                }
+            }
+            else{
+                if(whiteTurn){
+                    Sprite rook = whitePieces.get(0);
+                    GridPane.setConstraints(rook,3,7);
+                    rook.setPosition(3,7);
+                }
+                else{
+                    Sprite rook = blackPieces.get(0);
+                    GridPane.setConstraints(rook,3,0);
+                    rook.setPosition(3,0);
+                }
+            }
+            //move king
+            GridPane.setConstraints(getSelectedPiece(),x,y);
+            System.out.println("here");
+        }
+
         GridPane.setConstraints(getSelectedPiece(), x, y);
         getSelectedPiece().setPosition(y, x);
         setSelectedPiece(null);
