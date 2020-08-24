@@ -30,7 +30,7 @@ object StringSources {
             "Javion Smith-Sanders\n" +
             "Samuel Tate\n" +
             "Tim Tran"
-    private val VERSION_NUMBER = "1.0"
+    private val VERSION_NUMBER = "1.1"
     val VERSION = "Version: $VERSION_NUMBER"
     val VERSION_DIALOG = "Version Info"
 
