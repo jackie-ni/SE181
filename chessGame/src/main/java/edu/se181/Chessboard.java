@@ -1,5 +1,6 @@
 package edu.se181;
 
+import javafx.scene.Node;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -172,13 +173,13 @@ public class Chessboard {
                 }
                 else if (whiteTurn){
                     if (selectedPiece == null){
-                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                        highlightSquare(sprite.getXPos(), sprite.getYPos());
                     }else{
                         unhighlightSquare(selectedPiece.getXPos(), selectedPiece.getYPos());
                         for(Move move : selectedLegalMoves){
                             unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
                         }
-                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                        highlightSquare(sprite.getXPos(), sprite.getYPos());
                     }
 
                     setSelectedPiece(sprite);
@@ -196,13 +197,13 @@ public class Chessboard {
                 }
                 else if (!whiteTurn){
                     if (selectedPiece == null){
-                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                        highlightSquare(sprite.getXPos(), sprite.getYPos());
                     }else{
                         unhighlightSquare(selectedPiece.getXPos(), selectedPiece.getYPos());
                         for(Move move : selectedLegalMoves){
                             unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
                         }
-                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                        highlightSquare(sprite.getXPos(), sprite.getYPos());
                     }
                     setSelectedPiece(sprite);
                     setSelectedLegalMoves(getLegalMoves(sprite));
@@ -224,8 +225,8 @@ public class Chessboard {
         Move move;
         if (moves.isEmpty()) {
             unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
-            for(Move move : selectedLegalMoves){
-                unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
+            for(Move oldMove : selectedLegalMoves){
+                unhighlightSquare(oldMove.getFileDest(), 7 - oldMove.getRankDest());
             }
             setSelectedPiece(null);
             getSelectedLegalMoves().clear();
@@ -397,7 +398,7 @@ public class Chessboard {
                 s instanceof StackPane &&
                         GridPane.getColumnIndex(s)==x &&
                         GridPane.getRowIndex(s)==y);
-        ((Rectangle) (((StackPane)nodes.get(0)).getChildren().get(0))).setFill(Color.GREEN.desaturate());
+        ((Rectangle) (((StackPane)nodes.get(0)).getChildren().get(0))).setFill(Color.GREEN);
     }
 
     public void unhighlightSquare(int x, int y){
