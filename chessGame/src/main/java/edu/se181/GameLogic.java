@@ -44,9 +44,6 @@ public class GameLogic {
     public void analyzeGameState(boolean lastMoveWhite, int halfMoveClock, int repetitionIndex, List<String> boardStates) {
         evaluateDrawConditionsExceptStalemate(halfMoveClock, repetitionIndex, boardStates);
         findChecks(lastMoveWhite);
-        if (checkState > 0) {
-            System.out.println(checkState + " - check"); //debug
-        }
         determinePins(lastMoveWhite);
         boolean hasMove = hasLegalMove(!lastMoveWhite);
         if (!hasMove) {

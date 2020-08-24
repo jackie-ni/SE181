@@ -16,7 +16,7 @@ public class Game {
     protected int repetitionIndex;
     private Chessboard chessboard;
 
-    public Game() {
+    public Game(boolean white) {
         board = new Board();
         board.initialize();
         logicUnit = new GameLogic(board);
@@ -26,6 +26,7 @@ public class Game {
         halfMoveClock = 0;
         repetitionIndex = 0;
         whiteTurn = true;
+        playerIsWhite = white;
     }
 
     public Board getBoard() {
@@ -66,6 +67,14 @@ public class Game {
     }
 
     public void makeMove(Move move) {
+        if (move.getPiece().isWhite() != isWhiteTurn())
+            return;
+        if (isPlayerWhite() == isWhiteTurn()) {
+            HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
+        } else {
+            chessboard.moveFromServer(move);
+        }
+
         handleIrreversible(move);
 
         board.makeMove(move);
@@ -78,15 +87,13 @@ public class Game {
 
         handleFinish();
 
-        if (isPlayerWhite() == isWhiteTurn()) {
-            //HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
-        }
-
         changeTurn();
     }
 
     public List<Move> getLegalMoves(int rank, int file) {
         Piece mover = board.getSquareByRankFile(rank, file).getOccupant();
+        if (mover.isWhite() != isPlayerWhite())
+            return new ArrayList<>();
         return logicUnit.getLegalMoves(mover);
     }
 }
