@@ -5,7 +5,7 @@ The Chess Game is designed to be played on two separate computers from remote lo
 ## Creating Server 
 Before you play you have to setup your server environment. 
 
-1. Open up the file HtttpUtil.kt 
+1. Open up the file HttpUtil.kt 
 
 2. Both players change the Host variable to be the IP Address they want to host the game from. 
 
