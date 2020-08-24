@@ -28,6 +28,7 @@ class FindGameScreen {
                     //connect game
                     HttpUtil.connect(gameId, password.get())
                     //launch game stage
+                    GameStage.launch(true)
                 }
             }
         } else if (isPrivate == NO) {
@@ -38,6 +39,7 @@ class FindGameScreen {
                 //connect game
                 HttpUtil.connect(gameId)
                 //launch game stage
+                GameStage.launch(true)
             }
         }
     }
@@ -77,6 +79,7 @@ class FindGameScreen {
                             //connect game
                             HttpUtil.connect(listview.focusModel.focusedItem.gameId, password.get())
                             //launch game stage
+                            GameStage.launch(false)
                         }
                     }
                 } else {
@@ -85,6 +88,7 @@ class FindGameScreen {
                         //connect game
                         HttpUtil.connect(listview.focusModel.focusedItem.gameId)
                         //launch game stage
+                        GameStage.launch(false)
                     }
                 }
             }

@@ -17,7 +17,6 @@ class MainApp : Application() {
         stage.title = CHESS
         stage.scene = scene
         stage.show()
-        GameStage.launch()
     }
 
     companion object {

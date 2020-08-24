@@ -10,7 +10,7 @@ public class GameTest {
 
     @Before
     public void beforeEach() {
-        game = new Game();
+        game = new Game(true);
         game.boardStates.add("testBoardState1");
         game.boardStates.add("testBoardState2");
         game.halfMoveClock = 2;

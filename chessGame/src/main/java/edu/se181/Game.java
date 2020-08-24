@@ -16,7 +16,7 @@ public class Game {
     protected int repetitionIndex;
     private Chessboard chessboard;
 
-    public Game() {
+    public Game(boolean white) {
         board = new Board();
         board.initialize();
         logicUnit = new GameLogic(board);
@@ -26,6 +26,7 @@ public class Game {
         halfMoveClock = 0;
         repetitionIndex = 0;
         whiteTurn = true;
+        playerIsWhite = white;
     }
 
     public Board getBoard() {
@@ -79,7 +80,9 @@ public class Game {
         handleFinish();
 
         if (isPlayerWhite() == isWhiteTurn()) {
-            //HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
+            HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
+        } else {
+            chessboard.moveFromServer(move);
         }
 
         changeTurn();

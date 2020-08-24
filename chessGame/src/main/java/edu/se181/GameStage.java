@@ -17,9 +17,9 @@ public class GameStage {
     public static HBox top, bottom;
     public static CaptureBox left, right;
 
-    public static void launch() {
+    public static void launch(boolean white) {
         BorderPane layout = new BorderPane();
-        Chessboard cb = new Chessboard();
+        Chessboard cb = new Chessboard(white);
         GridPane chessBoard = cb.chessBoard;
         capturedWhitePieces = cb.getCapturedWhitePieces();
         capturedBlackPieces = cb.blackPieces;
