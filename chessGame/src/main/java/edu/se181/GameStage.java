@@ -82,6 +82,7 @@ public class GameStage {
             return;
         }
         MainApp.Companion.updateStage(root);
+        HttpUtil.INSTANCE.deleteGame();
     }
 
 }

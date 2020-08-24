@@ -23,11 +23,12 @@ object HttpUtil {
     private lateinit var wsClient: WebSocketClient
 
     var game: Game? = null
+    var connectedGame: String = ""
 
     fun connect(gameId: String, password: String = "") {
-        wsClient = NewWebSocketClient("$WEBSOCkET_URL/$gameId?password=$password")
-        println("$WEBSOCkET_URL/$gameId?password=$password")
+        wsClient = NewWebSocketClient(gameId, password)
         wsClient.connect()
+        connectedGame = gameId
     }
 
     fun getGames(): List<MatchProperties> {
@@ -49,9 +50,9 @@ object HttpUtil {
         return gson.fromJson<MatchProperties>(response.body(), MatchProperties::class.java).gameId
     }
 
-    fun deleteGame(gameId: String)  {
+    fun deleteGame() {
         val request = HttpRequest.newBuilder()
-                .uri(URI.create("$GAMES_URL/$gameId"))
+                .uri(URI.create("$GAMES_URL/$connectedGame"))
                 .DELETE()
                 .build()
         HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString())
@@ -71,7 +72,9 @@ object HttpUtil {
         wsClient.send(message)
     }
 
-    private class NewWebSocketClient(url: String) : WebSocketClient(URI(url), Draft_17()) {
+    private class NewWebSocketClient(gameId: String, password: String) :
+            WebSocketClient(URI("$WEBSOCkET_URL/$gameId?password=$password"), Draft_17()) {
+
         override fun onOpen(handshakedata: ServerHandshake?) {
             println("Opened")
         }
