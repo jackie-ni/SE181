@@ -31,6 +31,44 @@ public class GameLogicTest {
         gameLogic = new GameLogic(board);
     }
 
+    @Test
+    public void evaluateDrawConditionsExceptStalemate_GivenDeadBoardState_SetsDrawAndFinishStates(){
+        gameLogic.getBoard().loadBoard("00000000000k0000000000000000000000000000000000000K00000000000000000000");
+        // https://lichess.org/editor/5k2/8/8/8/8/3K4/8/8_b_-_-_0_1
+
+        gameLogic.evaluateDrawConditionsExceptStalemate(0, 0, new ArrayList<String>());
+
+        Assert.assertTrue(gameLogic.getFinished());
+        Assert.assertEquals(0, gameLogic.getFinishState());
+        Assert.assertEquals(1, gameLogic.getDrawCondition());
+    }
+
+    @Test
+    public void evaluateDrawConditionsExceptStalemate_GivenThreeFoldRepetition_SetsDrawAndFinishStates(){
+        List<String> boardStates = new ArrayList<>();
+        boardStates.add("string1");
+        boardStates.add("string2");
+        boardStates.add("string1");
+        boardStates.add("string2");
+        boardStates.add("string1");
+
+        gameLogic.evaluateDrawConditionsExceptStalemate(0, 0, boardStates);
+
+        Assert.assertTrue(gameLogic.getFinished());
+        Assert.assertEquals(0, gameLogic.getFinishState());
+        Assert.assertEquals(2, gameLogic.getDrawCondition());
+    }
+
+    @Test
+    public void evaluateDrawConditionsExceptStalemate_Given100HalfMoves_SetsDrawAndFinishStates(){
+
+        gameLogic.evaluateDrawConditionsExceptStalemate(100, 0, new ArrayList<String>());
+
+        Assert.assertTrue(gameLogic.getFinished());
+        Assert.assertEquals(0, gameLogic.getFinishState());
+        Assert.assertEquals(3, gameLogic.getDrawCondition());
+    }
+
     // findChecks Tests
 
     @Test
