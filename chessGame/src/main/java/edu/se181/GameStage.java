@@ -27,8 +27,8 @@ public class GameStage {
         left = cb.whiteCaptured;
         right = cb.blackCaptured;
 
-        left.setPrefSize(250,600);
-        right.setPrefSize(250,600);
+        left.setPrefSize(100,600);
+        right.setPrefSize(100,600);
         top.setPrefSize(600,100);
         bottom.setPrefSize(600,100);
 
