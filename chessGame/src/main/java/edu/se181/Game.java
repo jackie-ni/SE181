@@ -94,7 +94,7 @@ public class Game {
         handleFinish();
 
         if (isPlayerWhite() == isWhiteTurn()) {
-            // TODO: socket code to send our move to the server
+            HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
         }
 
         changeTurn();
