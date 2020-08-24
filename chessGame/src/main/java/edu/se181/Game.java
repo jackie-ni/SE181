@@ -44,6 +44,10 @@ public class Game {
         return playerIsWhite;
     }
 
+    public void setChessboard(Chessboard cb) {
+        chessboard = cb;
+    }
+
     protected void handleIrreversible(Move move) {
         int irreversible = DrawChecker.isIrreversibleMove(move);
         if (irreversible > 0) {
@@ -55,29 +59,10 @@ public class Game {
     }
 
     public void handleFinish() {
-        if (logicUnit.isFinished()) {
-            if (logicUnit.getFinishState() == -1) {
-                System.out.println("black win by checkmate");
-                // TODO: black victory
-            } else if (logicUnit.getFinishState() == 1) {
-                System.out.println("white win by checkmate");
-                // TODO: white victory
-            } else {
-                System.out.println("draw");
-                if (logicUnit.getDrawCondition() == 0) {
-                    // TODO: stalemate
-                } else if (logicUnit.getDrawCondition() == 1) {
-                    // TODO: insufficient material
-                } else if (logicUnit.getDrawCondition() == 2) {
-                    // TODO: threefold repetition
-                } else if (logicUnit.getDrawCondition() == 3) {
-                    // TODO: 50 move
-                } else {
-                    // TODO: mutual draw agreement
-                }
-            }
-            // TODO: implement game teardown code
-        }
+        if (!logicUnit.isFinished())
+            return;
+        GameStage.endGame(logicUnit.finishState, logicUnit.drawCondition);
+        // TODO: tell server to end game
     }
 
     public void makeMove(Move move) {
@@ -94,7 +79,7 @@ public class Game {
         handleFinish();
 
         if (isPlayerWhite() == isWhiteTurn()) {
-            HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
+            //HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
         }
 
         changeTurn();
