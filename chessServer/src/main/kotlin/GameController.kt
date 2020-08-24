@@ -45,10 +45,32 @@ object GameController {
         }
     }
 
+    fun checkPassword(ctx: Context) {
+        val gameId = ctx.pathParam("gameId")
+        val password = ctx.queryParam("password")
+
+        var game = games.firstOrNull { x -> x.gameId == gameId }
+
+        if (game == null) {
+            ctx
+                    .status(404)
+                    .json(WebError("game with gameId $gameId not found"))
+            return
+        }
+
+        if (!game.checkPassword(password)) {
+            ctx
+                    .status(401)
+                    .json(WebError("incorrect password"))
+            return
+        }
+
+        ctx.status(200)
+    }
+
     fun onConnect(ctx: WsContext) {
         val gameId = ctx.pathParam(":gameId")
         val game = games.find { x -> x.gameId == gameId }
-
 
         if (game != null && game.players < 2) {
             if (game.private) {
