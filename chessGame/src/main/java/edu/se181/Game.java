@@ -96,4 +96,33 @@ public class Game {
             return new ArrayList<>();
         return logicUnit.getLegalMoves(mover);
     }
+
+    public void offerDraw() {
+        HttpUtil.INSTANCE.sendMessage("draw", "offer");
+    }
+
+    public void handleDraw(String status) {
+        if (status.equals("offer")) {
+            boolean end = GameStage.offerDraw();
+            if (end) {
+                HttpUtil.INSTANCE.sendMessage("draw", "accept");
+                GameStage.endGame(0, 4);
+            } else {
+                HttpUtil.INSTANCE.sendMessage("draw", "reject");
+            }
+        } else if (status.equals("accept")) {
+            // Game end message
+            GameStage.endGame(0, 4);
+        }
+    }
+
+    public void resign() {
+        HttpUtil.INSTANCE.sendMessage("resign", "");
+        GameStage.endGame(2 * (playerIsWhite ? -1 : 1), 0);
+    }
+
+    public void handleResign() {
+        GameStage.endGame(2 * (playerIsWhite ? 1 : -1), 0);
+        // Game end message
+    }
 }

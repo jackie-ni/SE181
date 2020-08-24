@@ -36,11 +36,10 @@ public class Chessboard {
     private boolean playerIsWhite;
     private Game game;
 
-    public Chessboard(boolean white){
-        game = new Game(white);
+    public Chessboard(Game game){
         createChessBoard();
         HttpUtil.INSTANCE.setGame(game);
-        playerIsWhite = white;
+        playerIsWhite = game.isPlayerWhite();
         game.setChessboard(this);
     }
 
