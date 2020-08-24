@@ -345,7 +345,7 @@ public class Chessboard {
         }
 
         GridPane.setConstraints(getSelectedPiece(), move.getFileDest(), 7 - move.getRankDest());
-        getSelectedPiece().setPosition(move.getRankDest(), 7 - move.getFileDest());
+        getSelectedPiece().setPosition(move.getFileDest(), 7 - move.getRankDest());
         unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
         setSelectedPiece(null);
         getSelectedLegalMoves().clear();
@@ -430,16 +430,7 @@ public class Chessboard {
     }
 
     public List<Move> getLegalMoves(Sprite sprite){
-        List<Move> moves = game.getLegalMoves(7-sprite.getYPos(),sprite.getXPos());
-        if (moves.isEmpty())
-            System.out.println("No moves"); // debug
-        for(Move m : moves) {
-            System.out.print((char) (m.getFileDest() + 97));
-            System.out.println((char) (m.getRankDest() + 49));
-        }
-        System.out.println(game.halfMoveClock);
-        System.out.println("----");
-        return moves;
+        return game.getLegalMoves(7-sprite.getYPos(),sprite.getXPos());
     }
 
     public void moveFromServer(Move move) {
