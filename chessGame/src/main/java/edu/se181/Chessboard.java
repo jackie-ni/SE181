@@ -32,6 +32,7 @@ public class Chessboard {
 
     public Chessboard(){
         createChessBoard();
+        HttpUtil.INSTANCE.setGame(game);
     }
 
     public void setSelectedPiece(Sprite piece){
