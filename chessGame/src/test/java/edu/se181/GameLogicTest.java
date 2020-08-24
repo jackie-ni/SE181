@@ -38,7 +38,7 @@ public class GameLogicTest {
 
         gameLogic.evaluateDrawConditionsExceptStalemate(0, 0, new ArrayList<String>());
 
-        Assert.assertTrue(gameLogic.getFinished());
+        Assert.assertTrue(gameLogic.isFinished());
         Assert.assertEquals(0, gameLogic.getFinishState());
         Assert.assertEquals(1, gameLogic.getDrawCondition());
     }
@@ -54,7 +54,7 @@ public class GameLogicTest {
 
         gameLogic.evaluateDrawConditionsExceptStalemate(0, 0, boardStates);
 
-        Assert.assertTrue(gameLogic.getFinished());
+        Assert.assertTrue(gameLogic.isFinished());
         Assert.assertEquals(0, gameLogic.getFinishState());
         Assert.assertEquals(2, gameLogic.getDrawCondition());
     }
@@ -64,7 +64,7 @@ public class GameLogicTest {
 
         gameLogic.evaluateDrawConditionsExceptStalemate(100, 0, new ArrayList<String>());
 
-        Assert.assertTrue(gameLogic.getFinished());
+        Assert.assertTrue(gameLogic.isFinished());
         Assert.assertEquals(0, gameLogic.getFinishState());
         Assert.assertEquals(3, gameLogic.getDrawCondition());
     }

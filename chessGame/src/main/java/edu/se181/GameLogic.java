@@ -6,15 +6,15 @@ import java.util.stream.Collectors;
 
 public class GameLogic {
     private Board board;
-    private boolean finished;
-    private int finishState;
+    protected boolean finished;
+    protected int finishState;
     // Draw conditions:
     // 0 - Stalemate
     // 1 - Insufficient Material
     // 2 - Repetition
     // 3 - 50 Move Rule
     // 4 - Mutual Draw Agreement
-    private int drawCondition;
+    protected int drawCondition;
     protected int checkState;
     protected List<Square> checkSquares;
 
@@ -29,7 +29,7 @@ public class GameLogic {
         return board;
     }
 
-    protected boolean getFinished(){
+    protected boolean isFinished(){
         return finished;
     }
 
