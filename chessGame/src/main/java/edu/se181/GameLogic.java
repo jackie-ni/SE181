@@ -143,9 +143,13 @@ public class GameLogic {
         if (lastMoveWhite) {
             enemyPieces = board.getWhitePieces();
             king = (King) board.getBlackPieces().stream().filter((Piece p) -> p instanceof King).collect(Collectors.toList()).get(0);
+            for (Piece p : board.getBlackPieces())
+                p.setPinnedBy(null);
         } else {
             enemyPieces = board.getBlackPieces();
             king = (King) board.getWhitePieces().stream().filter((Piece p) -> p instanceof King).collect(Collectors.toList()).get(0);
+            for (Piece p : board.getWhitePieces())
+                p.setPinnedBy(null);
         }
         for (Piece piece : enemyPieces) {
             if (piece instanceof Bishop) {
@@ -607,17 +611,29 @@ public class GameLogic {
             // Filter king's legal squares to ones that opponent pieces can't move to
             if (piece.isWhite())
                 for (Piece other : board.getBlackPieces()) {
-                    moves = moves.stream()
-                            .filter((Move m) -> getBaseMoves(other, true)
-                                    .stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest()))
-                            .collect(Collectors.toList());
+                    if (other instanceof Pawn) {
+                        moves = moves.stream()
+                                .filter((Move m) -> (m.getRankDest() != other.getRank() + (other.isWhite() ? 1 : -1)) || (m.getFileDest() != other.getFile() + 1 && m.getFileDest() != other.getFile() - 1))
+                                .collect(Collectors.toList());
+                    } else {
+                        moves = moves.stream()
+                                .filter((Move m) -> getBaseMoves(other, true)
+                                        .stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest()))
+                                .collect(Collectors.toList());
+                    }
                 }
             else
                 for (Piece other : board.getWhitePieces()) {
-                    moves = moves.stream()
-                            .filter((Move m) -> getBaseMoves(other, true)
-                                    .stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest()))
-                            .collect(Collectors.toList());
+                    if (other instanceof Pawn) {
+                        moves = moves.stream()
+                                .filter((Move m) -> (m.getRankDest() != other.getRank() + (other.isWhite() ? 1 : -1)) || (m.getFileDest() != other.getFile() + 1 && m.getFileDest() != other.getFile() - 1))
+                                .collect(Collectors.toList());
+                    } else {
+                        moves = moves.stream()
+                                .filter((Move m) -> getBaseMoves(other, true)
+                                        .stream().noneMatch((Move m2) -> m.getRankDest() == m2.getRankDest() && m.getFileDest() == m2.getFileDest()))
+                                .collect(Collectors.toList());
+                    }
                 }
             // Check in between square for check if castling
             List<Move> kingMoves = moves;
