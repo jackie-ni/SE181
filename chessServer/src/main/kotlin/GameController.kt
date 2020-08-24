@@ -1,4 +1,5 @@
 import io.javalin.http.Context
+import io.javalin.plugin.json.JavalinJson
 import io.javalin.websocket.WsContext
 import io.javalin.websocket.WsMessageContext
 import java.lang.Exception
@@ -48,14 +49,23 @@ object GameController {
         val gameId = ctx.pathParam(":gameId")
         val game = games.find { x -> x.gameId == gameId }
 
-        var password = ctx.queryParam("password")
 
-        if (game != null && game.checkPassword(password) && game.players < 2) {
-            game.addPlayer(ctx, "player${game.players}")
+        if (game != null && game.players < 2) {
+            if (game.private) {
+                var password = ctx.queryParam("password")
+
+                if (game.checkPassword(password)) {
+                    game.addPlayer(ctx, "player${game.players}")
+                    return
+                }
+            }
+            else {
+                game.addPlayer(ctx, "player${game.players}")
+                return
+            }
         }
-        else {
-            ctx.session.disconnect()
-        }
+
+        ctx.session.disconnect()
     }
 
     fun onClose(ctx: WsContext) {

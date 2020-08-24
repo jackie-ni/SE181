@@ -1,7 +1,7 @@
 import io.javalin.websocket.WsContext
 
 data class Game (
-        var name: String,
+        var name: String = "",
         val private: Boolean = false,
         var gameId: String = "",
         var players: Int = 0,
@@ -13,6 +13,10 @@ data class Game (
     fun addPlayer(ctx: WsContext, username: String) {
         playerMap[ctx] = username
         players = playerMap.size
+    }
+
+    fun getPlayer(ctx: WsContext): WsContext? {
+        return playerMap.keys.firstOrNull { x -> x == ctx }
     }
 
     fun removePlayer(ctx: WsContext) {
