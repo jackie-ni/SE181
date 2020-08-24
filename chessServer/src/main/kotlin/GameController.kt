@@ -101,7 +101,7 @@ object GameController {
         val gameId = ctx.pathParam(":gameId")
         val game = games.find { x -> x.gameId == gameId }
 
-        game?.sendMessage(ctx.message())
+        game?.sendMessage(ctx)
     }
 
     private fun randomId() = UUID.randomUUID().toString()

@@ -67,6 +67,14 @@ public class Game {
     }
 
     public void makeMove(Move move) {
+        if (move.getPiece().isWhite() != isWhiteTurn())
+            return;
+        if (isPlayerWhite() == isWhiteTurn()) {
+            HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
+        } else {
+            chessboard.moveFromServer(move);
+        }
+
         handleIrreversible(move);
 
         board.makeMove(move);
@@ -78,12 +86,6 @@ public class Game {
         logicUnit.analyzeGameState(isWhiteTurn(), halfMoveClock, repetitionIndex, boardStates);
 
         handleFinish();
-
-        if (isPlayerWhite() == isWhiteTurn()) {
-            HttpUtil.INSTANCE.sendMessage("move", logicUnit.convertToNotation(move));
-        } else {
-            chessboard.moveFromServer(move);
-        }
 
         changeTurn();
     }

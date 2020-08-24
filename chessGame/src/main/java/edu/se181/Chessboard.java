@@ -256,7 +256,6 @@ public class Chessboard {
                     rook.setPosition(3,0);
                 }
             }
-            GridPane.setConstraints(getSelectedPiece(), move.getFileDest(), 7 - move.getRankDest());
         }
 
         if (move instanceof PromoteMove) {
@@ -346,10 +345,11 @@ public class Chessboard {
         }
 
         GridPane.setConstraints(getSelectedPiece(), move.getFileDest(), 7 - move.getRankDest());
-        getSelectedPiece().setPosition(move.getFileDest(), 7 - move.getRankDest());
+        getSelectedPiece().setPosition(move.getRankDest(), 7 - move.getFileDest());
         unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
         setSelectedPiece(null);
         getSelectedLegalMoves().clear();
+        whiteTurn = !whiteTurn;
     }
 
     public void move(int x, int y){
@@ -376,8 +376,6 @@ public class Chessboard {
         }
 
         movePieces(move);
-
-        whiteTurn = !whiteTurn;
 
         game.makeMove(move);
     }
@@ -447,9 +445,9 @@ public class Chessboard {
     public void moveFromServer(Move move) {
         Sprite mover;
         if (whiteTurn)
-            mover = whitePieces.stream().filter((Sprite s) -> move.getRankDest() == s.getYPos() && move.getFileDest() == s.getXPos()).collect(Collectors.toList()).get(0);
+            mover = whitePieces.stream().filter((Sprite s) -> move.getPiece().getRank() == 7 - s.getYPos() && move.getPiece().getFile() == s.getXPos()).collect(Collectors.toList()).get(0);
         else
-            mover = blackPieces.stream().filter((Sprite s) -> move.getRankDest() == s.getYPos() && move.getFileDest() == s.getXPos()).collect(Collectors.toList()).get(0);
+            mover = blackPieces.stream().filter((Sprite s) -> move.getPiece().getRank() == 7 - s.getYPos() && move.getPiece().getFile() == s.getXPos()).collect(Collectors.toList()).get(0);
         setSelectedPiece(mover);
         movePieces(move);
     }

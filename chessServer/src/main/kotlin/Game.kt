@@ -1,4 +1,5 @@
 import io.javalin.websocket.WsContext
+import io.javalin.websocket.WsMessageContext
 
 data class Game (
         var name: String = "",
@@ -30,9 +31,10 @@ data class Game (
         return input != null && input == password
     }
 
-    fun sendMessage(message: String) {
+    fun sendMessage(ctx: WsMessageContext) {
         playerMap.keys.forEach { session ->
-            session.send(message)
+            if (session != ctx)
+                session.send(ctx.message())
         }
     }
 }

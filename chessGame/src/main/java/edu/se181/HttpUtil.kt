@@ -76,7 +76,7 @@ object HttpUtil {
             val message2 = gson.fromJson<Message>(message, Message::class.java)
 
             when (message2.type) {
-                "move" -> game?.makeMove(game?.logicUnit?.convertToMove(message))
+                "move" -> game?.makeMove(game?.logicUnit?.convertToMove(message2.data))
                 "resign" -> println("resign") //TODO: handle resign message types
                 "draw" -> println("draw") //TODO: handle draw message types
                 "end" -> println("end") //TODO: handle end message types
