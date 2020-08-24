@@ -1,6 +1,6 @@
 package edu.se181;
 
-import javafx.scene.Node;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -10,6 +10,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 //Visual creation of the chessboard
@@ -32,6 +33,7 @@ public class Chessboard {
 
     public Chessboard(){
         createChessBoard();
+        HttpUtil.INSTANCE.setGame(game);
     }
 
     public void setSelectedPiece(Sprite piece){
@@ -150,35 +152,22 @@ public class Chessboard {
 
         for(Sprite sprites: blackPieces){
             sprites.setPosition(GridPane.getColumnIndex(sprites),GridPane.getRowIndex(sprites));
-            sprites.setOnMouseClicked(e->{
-                if(whiteTurn && whitePieces.contains(getSelectedPiece())){
-                    move(sprites.getXPos(),sprites.getYPos());
-                }
-                else if (!whiteTurn){
-                    if (selectedPiece == null){
-                        highlightSquare(sprites.getXPos(), sprites.getYPos());
-                    }else{
-                        unhighlightSquare(selectedPiece.getXPos(), selectedPiece.getYPos());
-                        for(Move move : selectedLegalMoves){
-                            unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
-                        }
-                        highlightSquare(sprites.getXPos(), sprites.getYPos());
-                    }
-                    setSelectedPiece(sprites);
-                    setSelectedLegalMoves(getLegalMoves(sprites));
-
-                    for(Move move : selectedLegalMoves){
-                        highlightSquare(move.getFileDest(), 7 - move.getRankDest());
-                    }
-                }
-
-            });
+            addHandler(sprites, false);
         }
         for(Sprite sprites: whitePieces){
             sprites.setPosition(GridPane.getColumnIndex(sprites),GridPane.getRowIndex(sprites));
-            sprites.setOnMouseClicked(e->{
+            addHandler(sprites, true);
+        }
+        board.getChildren().addAll(blackPieces);
+        board.getChildren().addAll(whitePieces);
+
+    }
+
+    public void addHandler(Sprite sprite, boolean forWhite) {
+        if (forWhite) {
+            sprite.setOnMouseClicked(e->{
                 if(!whiteTurn && blackPieces.contains(getSelectedPiece())){
-                    move(sprites.getXPos(),sprites.getYPos());
+                    move(sprite.getXPos(),sprite.getYPos());
                 }
                 else if (whiteTurn){
                     if (selectedPiece == null){
@@ -190,18 +179,39 @@ public class Chessboard {
                         }
                         highlightSquare(sprites.getXPos(), sprites.getYPos());
                     }
-                    setSelectedPiece(sprites);
-                    setSelectedLegalMoves(getLegalMoves(sprites));
 
+                    setSelectedPiece(sprite);
+                    setSelectedLegalMoves(getLegalMoves(sprite));
+                    for(Move move : selectedLegalMoves){
+                        highlightSquare(move.getFileDest(), 7 - move.getRankDest());
+                    }
+
+                }
+            });
+        } else {
+            sprite.setOnMouseClicked(e->{
+                if(whiteTurn && whitePieces.contains(getSelectedPiece())){
+                    move(sprite.getXPos(),sprite.getYPos());
+                }
+                else if (!whiteTurn){
+                    if (selectedPiece == null){
+                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                    }else{
+                        unhighlightSquare(selectedPiece.getXPos(), selectedPiece.getYPos());
+                        for(Move move : selectedLegalMoves){
+                            unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
+                        }
+                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                    }
+                    setSelectedPiece(sprite);
+                    setSelectedLegalMoves(getLegalMoves(sprite));
                     for(Move move : selectedLegalMoves){
                         highlightSquare(move.getFileDest(), 7 - move.getRankDest());
                     }
                 }
+
             });
         }
-        board.getChildren().addAll(blackPieces);
-        board.getChildren().addAll(whitePieces);
-
     }
 
     public void move(int x, int y){
@@ -209,7 +219,9 @@ public class Chessboard {
                 (!whiteTurn && whitePieces.contains(getSelectedPiece()))){
             return ;
         }
-        if (getSelectedLegalMoves().stream().noneMatch((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x)) {
+        List<Move> moves = getSelectedLegalMoves().stream().filter((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x).collect(Collectors.toList());
+        Move move;
+        if (moves.isEmpty()) {
             unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
             for(Move move : selectedLegalMoves){
                 unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
@@ -217,22 +229,9 @@ public class Chessboard {
             setSelectedPiece(null);
             getSelectedLegalMoves().clear();
             return ;
-        }
-        if(whiteTurn){
-            for(Sprite piece: blackPieces){
-                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
-                    remove(piece);
-                }
-            }
-        }
-        else{
-            for(Sprite piece: whitePieces){
-                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
-                    remove(piece);
-                }
-            }
-        }
-        Move move = getSelectedLegalMoves().stream().filter((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x).collect(Collectors.toList()).get(0);
+        } else
+            move = moves.get(0);
+
         if (move instanceof EnPassantMove) {
             if (whiteTurn) {
                 Sprite pawn = blackPieces.stream().filter((Sprite s) -> s.getXPos() == x && s.getYPos() == y + 1).collect(Collectors.toList()).get(0);
@@ -242,11 +241,13 @@ public class Chessboard {
                 remove(pawn);
             }
         }
+
         unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
         for(Move move2 : selectedLegalMoves){
             unhighlightSquare(move2.getFileDest(), 7 - move2.getRankDest());
         }
         game.makeMove(move);
+
 
         if(move instanceof CastleMove){
             //move rook
@@ -279,6 +280,94 @@ public class Chessboard {
             System.out.println("here");
         }
 
+        if (move instanceof PromoteMove) {
+            List<String> promotePieces = new ArrayList<>();
+            String promotePieceString;
+            promotePieces.add("Queen");
+            promotePieces.add("Rook");
+            promotePieces.add("Bishop");
+            promotePieces.add("Knight");
+            ChoiceDialog<String> choiceDialog = new ChoiceDialog<>(promotePieces.get(0), promotePieces);
+            choiceDialog.setTitle("Pawn Promotion");
+            choiceDialog.setHeaderText("Select piece to promote pawn to");
+            Optional<String> result = choiceDialog.showAndWait();
+            if (result.isPresent()) {
+                promotePieceString = result.get();
+            } else {
+                setSelectedPiece(null);
+                getSelectedLegalMoves().clear();
+                return;
+            }
+            int pieceType = -1;
+            for (int i = 0; i < promotePieces.size(); i++) {
+                if (promotePieces.get(i).equals(promotePieceString)) {
+                    pieceType = i;
+                    break;
+                }
+            }
+            Piece promotePiece;
+            Sprite promotePieceSprite;
+            if (pieceType == 0) {
+                promotePiece = new Queen(7 - y, x, whiteTurn);
+                if (whiteTurn)
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_QUEEN()));
+                else
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_QUEEN()));
+            } else if (pieceType == 1) {
+                promotePiece = new Rook(7 - y, x, whiteTurn);
+                if (whiteTurn)
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_ROOK()));
+                else
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_ROOK()));
+            } else if (pieceType == 2) {
+                promotePiece = new Bishop(7 - y, x, whiteTurn);
+                if (whiteTurn)
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_BISHOP()));
+                else
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_BISHOP()));
+            } else {
+                promotePiece = new Knight(7 - y, x, whiteTurn);
+                if (whiteTurn)
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getWHITE_KNIGHT()));
+                else
+                    promotePieceSprite = new Sprite(new Image(StringSources.INSTANCE.getBLACK_KNIGHT()));
+            }
+            ((PromoteMove) move).setPromotePiece(promotePiece);
+            GridPane.setConstraints(promotePieceSprite, x, y);
+            if (whiteTurn) {
+                whitePieces.remove(getSelectedPiece());
+                whitePieces.add(promotePieceSprite);
+                System.out.println("setting event handler");
+            } else {
+                blackPieces.remove(getSelectedPiece());
+                blackPieces.add(promotePieceSprite);
+                System.out.println("setting event handler");
+            }
+            addHandler(promotePieceSprite, whiteTurn);
+            chessBoard.getChildren().remove(getSelectedPiece());
+            chessBoard.getChildren().add(promotePieceSprite);
+            setSelectedPiece(promotePieceSprite);
+        }
+
+        if(whiteTurn){
+            for(Sprite piece: blackPieces){
+                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
+                    remove(piece);
+                    break;
+                }
+            }
+        }
+        else{
+            for(Sprite piece: whitePieces){
+                if(GridPane.getRowIndex(piece)==y && GridPane.getColumnIndex(piece)==x){
+                    remove(piece);
+                    break;
+                }
+            }
+        }
+
+        game.makeMove(move);
+
         GridPane.setConstraints(getSelectedPiece(), x, y);
         getSelectedPiece().setPosition(x, y);
         unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
@@ -293,10 +382,12 @@ public class Chessboard {
     public void remove(Sprite piece){
         chessBoard.getChildren().remove(piece);
         if(whiteTurn){
+            blackPieces.remove(piece);
             capturedBlackPieces.add(piece);
             blackCaptured.showPiece(piece);
         }
         else{
+            whitePieces.remove(piece);
             capturedWhitePieces.add(piece);
             whiteCaptured.showPiece(piece);
         }
@@ -345,6 +436,7 @@ public class Chessboard {
             System.out.print((char) (m.getFileDest() + 97));
             System.out.println((char) (m.getRankDest() + 49));
         }
+        System.out.println(game.halfMoveClock);
         System.out.println("----");
         return moves;
     }

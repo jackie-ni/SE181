@@ -20,14 +20,14 @@ object HttpUtil {
 
     val gson = Gson()
 
-    private lateinit var mWs: WebSocketClient
+    private lateinit var wsClient: WebSocketClient
+
+    var game: Game? = null
 
     fun connect(gameId: String, password: String = "") {
-        // "$WEBSOCkET_URL/$gameId?password=$password"
-        mWs = NewWebSocketClient("$WEBSOCkET_URL/$gameId?password=$password")
+        wsClient = NewWebSocketClient("$WEBSOCkET_URL/$gameId?password=$password")
         println("$WEBSOCkET_URL/$gameId?password=$password")
-        mWs.connect()
-
+        wsClient.connect()
     }
 
     fun getGames(): List<MatchProperties> {
@@ -57,6 +57,12 @@ object HttpUtil {
         return HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString()).statusCode() == 200
     }
 
+    fun sendMessage(type: String, data: String) {
+        val message = gson.toJson(Message(type, data))
+
+        wsClient.send(message)
+    }
+
     private class NewWebSocketClient(url: String) : WebSocketClient(URI(url), Draft_17()) {
         override fun onOpen(handshakedata: ServerHandshake?) {
             println("Opened")
@@ -67,7 +73,15 @@ object HttpUtil {
         }
 
         override fun onMessage(message: String?) {
-            //todo
+            val message2 = gson.fromJson<Message>(message, Message::class.java)
+
+            when (message2.type) {
+                "move" -> game?.makeMove(game?.logicUnit?.convertToMove(message))
+                "resign" -> println("resign") //TODO: handle resign message types
+                "draw" -> println("draw") //TODO: handle draw message types
+                "end" -> println("end") //TODO: handle end message types
+                else -> println("This line should never be printed")
+            }
         }
 
         override fun onError(ex: Exception?) {
@@ -76,4 +90,5 @@ object HttpUtil {
 
     }
 
+    private data class Message(val type: String, val data: String) {}
 }
