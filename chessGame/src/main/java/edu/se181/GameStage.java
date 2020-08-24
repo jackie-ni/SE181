@@ -1,10 +1,13 @@
 package edu.se181;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+import javafx.scene.Parent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 //Contain the chessboard, capture piece boxes, draw/surrender buttons
@@ -46,6 +49,39 @@ public class GameStage {
         bottom.getChildren().addAll(surrender, draw);
 
         MainApp.Companion.updateStage(layout);
+    }
+
+    public static void endGame(int winner, int drawCondition) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Finished");
+        alert.setHeaderText("The game has ended.");
+        String contentText;
+        if (winner == -1)
+            contentText = "Black is the winner!";
+        else if (winner == 1)
+            contentText = "White is the winner!";
+        else {
+            if (drawCondition == 0)
+                contentText = "Draw by stalemate!";
+            else if (drawCondition == 1)
+                contentText = "Draw by insufficient material!";
+            else if (drawCondition == 2)
+                contentText = "Draw by threefold repetition!";
+            else if (drawCondition == 3)
+                contentText = "Draw by fifty-move rule!";
+            else
+                contentText = "You and your opponent agreed to a draw!";
+        }
+        alert.setContentText(contentText);
+        alert.showAndWait();
+        Parent root;
+        try {
+            root = FXMLLoader.load(GameStage.class.getResource(StringSources.INSTANCE.getMAIN_MENU_SCREEN_PATH()));
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        MainApp.Companion.updateStage(root);
     }
 
 }

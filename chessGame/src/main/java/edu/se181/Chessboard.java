@@ -34,6 +34,7 @@ public class Chessboard {
     public Chessboard(){
         createChessBoard();
         HttpUtil.INSTANCE.setGame(game);
+        game.setChessboard(this);
     }
 
     public void setSelectedPiece(Sprite piece){
@@ -275,9 +276,7 @@ public class Chessboard {
                     rook.setPosition(3,0);
                 }
             }
-            //move king
             GridPane.setConstraints(getSelectedPiece(),x,y);
-            System.out.println("here");
         }
 
         if (move instanceof PromoteMove) {
@@ -366,8 +365,6 @@ public class Chessboard {
             }
         }
 
-        game.makeMove(move);
-
         GridPane.setConstraints(getSelectedPiece(), x, y);
         getSelectedPiece().setPosition(x, y);
         unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
@@ -377,6 +374,8 @@ public class Chessboard {
         setSelectedPiece(null);
         getSelectedLegalMoves().clear();
         whiteTurn = !whiteTurn;
+
+        game.makeMove(move);
     }
 
     public void remove(Sprite piece){
