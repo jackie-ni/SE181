@@ -92,6 +92,8 @@ public class Game {
 
     public List<Move> getLegalMoves(int rank, int file) {
         Piece mover = board.getSquareByRankFile(rank, file).getOccupant();
+        if (mover.isWhite() != isPlayerWhite())
+            return new ArrayList<>();
         return logicUnit.getLegalMoves(mover);
     }
 }

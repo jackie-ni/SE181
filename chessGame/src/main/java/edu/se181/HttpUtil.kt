@@ -2,6 +2,7 @@ package edu.se181
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import javafx.application.Platform
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft_10
 import org.java_websocket.drafts.Draft_17
@@ -87,7 +88,7 @@ object HttpUtil {
             val message2 = gson.fromJson<Message>(message, Message::class.java)
 
             when (message2.type) {
-                "move" -> game?.makeMove(game?.logicUnit?.convertToMove(message2.data))
+                "move" -> Platform.runLater(Runnable {game?.makeMove(game?.logicUnit?.convertToMove(message2.data))})
                 "resign" -> println("resign") //TODO: handle resign message types
                 "draw" -> println("draw") //TODO: handle draw message types
                 "end" -> println("end") //TODO: handle end message types
