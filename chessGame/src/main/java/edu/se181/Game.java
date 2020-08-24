@@ -88,6 +88,7 @@ public class Game {
         handleFinish();
 
         changeTurn();
+        GameStage.updateTurnText(whiteTurn);
     }
 
     public List<Move> getLegalMoves(int rank, int file) {
