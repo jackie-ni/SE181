@@ -170,8 +170,22 @@ public class Chessboard {
                     move(sprite.getXPos(),sprite.getYPos());
                 }
                 else if (whiteTurn){
+                    if (selectedPiece == null){
+                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                    }else{
+                        unhighlightSquare(selectedPiece.getXPos(), selectedPiece.getYPos());
+                        for(Move move : selectedLegalMoves){
+                            unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
+                        }
+                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                    }
+
                     setSelectedPiece(sprite);
                     setSelectedLegalMoves(getLegalMoves(sprite));
+                    for(Move move : selectedLegalMoves){
+                        highlightSquare(move.getFileDest(), 7 - move.getRankDest());
+                    }
+
                 }
             });
         } else {
@@ -180,8 +194,20 @@ public class Chessboard {
                     move(sprite.getXPos(),sprite.getYPos());
                 }
                 else if (!whiteTurn){
+                    if (selectedPiece == null){
+                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                    }else{
+                        unhighlightSquare(selectedPiece.getXPos(), selectedPiece.getYPos());
+                        for(Move move : selectedLegalMoves){
+                            unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
+                        }
+                        highlightSquare(sprites.getXPos(), sprites.getYPos());
+                    }
                     setSelectedPiece(sprite);
                     setSelectedLegalMoves(getLegalMoves(sprite));
+                    for(Move move : selectedLegalMoves){
+                        highlightSquare(move.getFileDest(), 7 - move.getRankDest());
+                    }
                 }
 
             });
@@ -196,6 +222,10 @@ public class Chessboard {
         List<Move> moves = getSelectedLegalMoves().stream().filter((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x).collect(Collectors.toList());
         Move move;
         if (moves.isEmpty()) {
+            unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
+            for(Move move : selectedLegalMoves){
+                unhighlightSquare(move.getFileDest(), 7 - move.getRankDest());
+            }
             setSelectedPiece(null);
             getSelectedLegalMoves().clear();
             return ;
@@ -211,6 +241,13 @@ public class Chessboard {
                 remove(pawn);
             }
         }
+
+        unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
+        for(Move move2 : selectedLegalMoves){
+            unhighlightSquare(move2.getFileDest(), 7 - move2.getRankDest());
+        }
+        game.makeMove(move);
+
 
         if(move instanceof CastleMove){
             //move rook
@@ -333,6 +370,10 @@ public class Chessboard {
 
         GridPane.setConstraints(getSelectedPiece(), x, y);
         getSelectedPiece().setPosition(x, y);
+        unhighlightSquare(getSelectedPiece().getXPos(), getSelectedPiece().getYPos());
+        for(Move move1 : selectedLegalMoves){
+            unhighlightSquare(move1.getFileDest(), 7 - move1.getRankDest());
+        }
         setSelectedPiece(null);
         getSelectedLegalMoves().clear();
         whiteTurn = !whiteTurn;
@@ -352,12 +393,34 @@ public class Chessboard {
         }
     }
 
+    public void highlightSquare(int x, int y){
+        List<Node> nodes = chessBoard.getChildren().filtered((Node s)->
+                s instanceof StackPane &&
+                        GridPane.getColumnIndex(s)==x &&
+                        GridPane.getRowIndex(s)==y);
+        ((Rectangle) (((StackPane)nodes.get(0)).getChildren().get(0))).setFill(Color.GREEN.desaturate());
+    }
+
+    public void unhighlightSquare(int x, int y){
+        List<Node> nodes = chessBoard.getChildren().filtered((Node s)->
+                s instanceof StackPane &&
+                        GridPane.getColumnIndex(s)==x &&
+                        GridPane.getRowIndex(s)==y);
+
+        if ((x+y) % 2 == 1){
+            ((Rectangle) (((StackPane)nodes.get(0)).getChildren().get(0))).setFill(Color.GRAY);
+        }
+        else{
+            ((Rectangle) (((StackPane)nodes.get(0)).getChildren().get(0))).setFill(Color.BEIGE);
+        }
+
+    }
+
     public void highlight(ImageView piece){
         int y = GridPane.getRowIndex(piece);
         int x = GridPane.getColumnIndex(piece);
         Rectangle nSquare = new Rectangle(50,50);
         nSquare.setFill(Color.TRANSPARENT);
-
         StackPane newSquare = new StackPane();
         newSquare.getChildren().addAll(nSquare);
         newSquare.setBorder(new Border(new BorderStroke(Color.BLUE,
