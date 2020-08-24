@@ -25,6 +25,9 @@ public class DrawChecker {
 
 	static public boolean isThreefoldRepetition(List<String> boardStateList, int irreversibleMoveIndex){
 		HashMap<String, Integer> boardStateMap = new HashMap<>();
+		if (boardStateList.size() < 3){
+			return false;
+		}
     	for(String boardState : boardStateList.subList(irreversibleMoveIndex, boardStateList.size()-1)){
     		boardStateMap.putIfAbsent(boardState, 1);
 			if (boardStateMap.containsKey(boardState)){
@@ -39,7 +42,7 @@ public class DrawChecker {
     	return false;
 	}
 
-	public boolean isDeadPosition(Board board){
+	public static boolean isDeadPosition(Board board){
     	//going under the assumption that the pieces always contain the king
     	List<Piece> whitePieces = board.getWhitePieces();
     	List<Piece> blackPieces = board.getBlackPieces();
