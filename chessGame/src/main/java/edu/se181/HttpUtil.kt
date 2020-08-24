@@ -49,6 +49,14 @@ object HttpUtil {
         return gson.fromJson<MatchProperties>(response.body(), MatchProperties::class.java).gameId
     }
 
+    fun deleteGame(gameId: String)  {
+        val request = HttpRequest.newBuilder()
+                .uri(URI.create("$GAMES_URL/$gameId"))
+                .DELETE()
+                .build()
+        HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
     fun checkPassword(gameId: String, password: String): Boolean {
         val request = HttpRequest.newBuilder()
                 .uri(URI.create("$GAMES_URL/$gameId?password=$password"))

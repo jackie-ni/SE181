@@ -33,15 +33,14 @@ object GameController {
     }
 
     fun deleteGame(ctx: Context) {
-        val game = ctx.body<Game>()
+        val gameId = ctx.pathParam("gameId")
 
-        if (game.gameId != "") {
-            games.removeAll { x -> x.gameId == game.gameId }
-        }
-        else {
+        val result = games.removeAll { x -> x.gameId == gameId }
+
+        if (!result) {
             ctx
-                .status(400)
-                .json(WebError("must supply game id"))
+                    .status(404)
+                    .json(WebError("game with gameId $gameId not found"))
         }
     }
 

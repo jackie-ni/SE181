@@ -73,8 +73,7 @@ class GameControllerTests {
         GameController.games.add(Game(name = "remove-test", gameId = "remove-test"))
 
         val response = Unirest
-                .delete(testUrl)
-                .body(JSONObject().put("gameId", "remove-test"))
+                .delete("$testUrl/remove-test")
                 .asString()
 
         assertEquals(200, response.status)
@@ -82,13 +81,12 @@ class GameControllerTests {
     }
 
     @Test
-    fun `DELETE games without gameId returns 400`() {
+    fun `DELETE games with invalid gameId returns 404`() {
         val response = Unirest
-                .delete(testUrl)
-                .body("")
+                .delete("$testUrl/bad-id")
                 .asString()
 
-        assertEquals(400, response.status)
+        assertEquals(404, response.status)
     }
 
     @Test
