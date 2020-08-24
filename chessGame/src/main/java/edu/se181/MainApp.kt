@@ -17,6 +17,9 @@ class MainApp : Application() {
         stage.title = CHESS
         stage.scene = scene
         stage.show()
+        stage.setOnCloseRequest {
+            HttpUtil.deleteGame()
+         }
     }
 
     companion object {
