@@ -33,15 +33,19 @@ public class Chessboard {
     public CaptureBox whiteCaptured = new CaptureBox();
     public CaptureBox blackCaptured = new CaptureBox();
     private boolean whiteTurn = true;
-    private boolean playerIsWhite;
+    public boolean playerIsWhite;
     private Game game;
 
     public Chessboard(boolean white){
         game = new Game(white);
+        setPlayerIsWhite(white);
         createChessBoard();
         HttpUtil.INSTANCE.setGame(game);
-        playerIsWhite = white;
         game.setChessboard(this);
+    }
+
+    public void setPlayerIsWhite(boolean white){
+        this.playerIsWhite = white;
     }
 
     public void setSelectedPiece(Sprite piece){
@@ -85,6 +89,7 @@ public class Chessboard {
             }
         }
         setPieces(chessBoard);
+        System.out.println(playerIsWhite);
         this.chessBoard = chessBoard;
     }
 
