@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<?import javafx.scene.text.Text?>
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.se181.FindGameScreen">
+    <padding>
+        <Insets top="15" right="25" bottom="10" left="25"/>
+    </padding>
+
+    <Text fx:id="screenTitle"
+          text="Find Game"
+          GridPane.rowIndex="0"/>
+
+    <ListView prefHeight="200.0" prefWidth="292.0" GridPane.rowIndex="5"
+              fx:id="matches"/>
+
+    <HBox GridPane.rowIndex="6"
+          styleClass="buttonBox">
+        <Button text="Make Game"
+                style="-fx-font-size: 16px;"
+                onAction="#makeGameButtonAction"/>
+    </HBox>
+
+
+    <HBox GridPane.rowIndex="7"
+          styleClass="buttonBox">
+        <Button text="Back"
+                onAction="#backButtonAction"/>
+    </HBox>
+
+    <stylesheets>
+        <URL value="@/css/mainStyle.css"/>
+    </stylesheets>
+</GridPane>
