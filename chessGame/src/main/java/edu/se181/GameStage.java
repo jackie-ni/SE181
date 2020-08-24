@@ -32,9 +32,6 @@ public class GameStage {
         top.setPrefSize(600,100);
         bottom.setPrefSize(600,100);
 
-//        for(Sprite pieces: capturedBlackPieces){
-//            right.getChildren().add(pieces);
-//        }
 
         layout.setCenter(chessBoard);
         layout.setTop(top);

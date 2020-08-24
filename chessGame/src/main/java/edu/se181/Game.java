@@ -14,7 +14,7 @@ public class Game {
     protected List<String> boardStates;
     protected int halfMoveClock;
     protected int repetitionIndex;
-    private GameStage gameStage;
+    private Chessboard chessboard;
 
     public Game() {
         board = new Board();
