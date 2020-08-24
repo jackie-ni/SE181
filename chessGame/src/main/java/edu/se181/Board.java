@@ -102,11 +102,15 @@ public class Board {
                 }
             }
 
+            if(piece instanceof Pawn){
+                if (Math.abs(piece.getRank() - move.getRankDest()) == 2){
+                    ((Pawn) piece).setEnPassantable(true);
+                }
+            }
+
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
 
-            if (piece instanceof Pawn)
-                ((Pawn) piece).setEnPassantable(false);
             piece.firstMovePerformed();
         }
         else if (move instanceof CastleMove){
@@ -183,6 +187,20 @@ public class Board {
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
 
             piece.firstMovePerformed();
+        }
+
+        if (piece.isWhite()){
+            for (Piece blackPiece: blackPieces){
+                if(blackPiece instanceof Pawn){
+                    ((Pawn)(blackPiece)).setEnPassantable(false);
+                }
+            }
+        }else{
+            for (Piece whitePiece: whitePieces){
+                if(whitePiece instanceof Pawn){
+                    ((Pawn)(whitePiece)).setEnPassantable(false);
+                }
+            }
         }
     }
 
