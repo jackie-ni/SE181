@@ -168,7 +168,7 @@ public class Chessboard {
         }
         board.getChildren().addAll(blackPieces);
         board.getChildren().addAll(whitePieces);
-        if(!white){
+        if(!playerIsWhite){
             board.setRotate(180);
             for(Sprite s: whitePieces){
                 s.setRotate(180);
@@ -429,6 +429,8 @@ public class Chessboard {
     }
 
     public void highlightSquare(int x, int y){
+        if (playerIsWhite != whiteTurn)
+            return;
         List<Node> nodes = chessBoard.getChildren().filtered((Node s)->
                 s instanceof StackPane &&
                         GridPane.getColumnIndex(s)==x &&
