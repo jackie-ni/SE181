@@ -136,14 +136,14 @@ public class DrawCheckerTest {
     }
 
     @Test
-    public void isThreefoldRepetition_GivenNoRepetitionAndSubList_ReturnsFalse() {
+    public void isThreefoldRepetition_GivenRepetitionCutBySubList_ReturnsFalse() {
         List<String> boardStateList = new ArrayList<String>();
         boardStateList.add("string1");boardStateList.add("string2");
         boardStateList.add("string3");boardStateList.add("string2");
-        boardStateList.add("string3");boardStateList.add("string1");
+        boardStateList.add("string3");boardStateList.add("string2");
         boardStateList.add("string2");boardStateList.add("string1");
 
-        int index = 1;
+        int index = 3;
 
         boolean result = DrawChecker.isThreefoldRepetition(boardStateList, index);
 
