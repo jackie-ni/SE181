@@ -150,10 +150,10 @@ public class Chessboard {
         for(Sprite sprites: blackPieces){
             sprites.setPosition(GridPane.getRowIndex(sprites),GridPane.getColumnIndex(sprites));
             sprites.setOnMouseClicked(e->{
-                if(blackPieces.contains(getSelectedPiece())){
-                    move(sprites.getXPos(),sprites.getYPos());
+                if(whiteTurn && whitePieces.contains(getSelectedPiece())){
+                    move(sprites.getYPos(),sprites.getXPos());
                 }
-                else{
+                else if (!whiteTurn){
                     setSelectedPiece(sprites);
                     setSelectedLegalMoves(getLegalMoves(sprites));
                 }
@@ -163,10 +163,10 @@ public class Chessboard {
         for(Sprite sprites: whitePieces){
             sprites.setPosition(GridPane.getRowIndex(sprites),GridPane.getColumnIndex(sprites));
             sprites.setOnMouseClicked(e->{
-                if(whitePieces.contains(getSelectedPiece())){
-                    move(sprites.getXPos(),sprites.getYPos());
+                if(!whiteTurn && blackPieces.contains(getSelectedPiece())){
+                    move(sprites.getYPos(),sprites.getXPos());
                 }
-                else{
+                else if (whiteTurn){
                     setSelectedPiece(sprites);
                     setSelectedLegalMoves(getLegalMoves(sprites));
                 }
@@ -205,7 +205,7 @@ public class Chessboard {
         Move move = getSelectedLegalMoves().stream().filter((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x).collect(Collectors.toList()).get(0);
         game.makeMove(move);
         GridPane.setConstraints(getSelectedPiece(), x, y);
-        getSelectedPiece().setPosition(x,y);
+        getSelectedPiece().setPosition(y, x);
         setSelectedPiece(null);
         getSelectedLegalMoves().clear();
         whiteTurn = !whiteTurn;
@@ -237,7 +237,15 @@ public class Chessboard {
     }
 
     public List<Move> getLegalMoves(Sprite sprite){
-        return game.getLegalMoves(7-sprite.getXPos(),sprite.getYPos());
+        List<Move> moves = game.getLegalMoves(7-sprite.getXPos(),sprite.getYPos());
+        if (moves.isEmpty())
+            System.out.println("No moves"); // debug
+        for(Move m : moves) {
+            System.out.print((char) (m.getFileDest() + 97));
+            System.out.println((char) (m.getRankDest() + 49));
+        }
+        System.out.println("----");
+        return moves;
     }
 
 }

@@ -103,8 +103,10 @@ public class Board {
             }
 
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
-            squares[7-move.getRankDest()][piece.getFile()].setOccupant(piece);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
 
+            if (piece instanceof Pawn)
+                ((Pawn) piece).setEnPassantable(false);
             piece.firstMovePerformed();
         }
         else if (move instanceof CastleMove){

@@ -25,6 +25,7 @@ public class Game {
         boardStates.add(board.toBoardState());
         halfMoveClock = 0;
         repetitionIndex = 0;
+        whiteTurn = true;
     }
 
     public Board getBoard() {
@@ -56,10 +57,13 @@ public class Game {
     public void handleFinish() {
         if (logicUnit.isFinished()) {
             if (logicUnit.getFinishState() == -1) {
+                System.out.println("black win by checkmate");
                 // TODO: black victory
             } else if (logicUnit.getFinishState() == 1) {
+                System.out.println("white win by checkmate");
                 // TODO: white victory
             } else {
+                System.out.println("draw");
                 if (logicUnit.getDrawCondition() == 0) {
                     // TODO: stalemate
                 } else if (logicUnit.getDrawCondition() == 1) {

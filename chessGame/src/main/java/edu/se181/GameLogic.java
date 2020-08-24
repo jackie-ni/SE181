@@ -44,6 +44,9 @@ public class GameLogic {
     public void analyzeGameState(boolean lastMoveWhite, int halfMoveClock, int repetitionIndex, List<String> boardStates) {
         evaluateDrawConditionsExceptStalemate(halfMoveClock, repetitionIndex, boardStates);
         findChecks(lastMoveWhite);
+        if (checkState > 0) {
+            System.out.println(checkState + " - check"); //debug
+        }
         determinePins(lastMoveWhite);
         boolean hasMove = hasLegalMove(!lastMoveWhite);
         if (!hasMove) {
@@ -398,8 +401,10 @@ public class GameLogic {
                                 moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
                                 if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                     break;
-                            } else
+                            } else {
+                                moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                                 break;
+                            }
                             distance++;
                         }
                     } while (targetSquare != null);
@@ -419,8 +424,10 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
                             if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
-                        } else
+                        } else {
+                            moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                             break;
+                        }
                         distance++;
                     }
                 } while (targetSquare != null);
@@ -435,8 +442,10 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
                             if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
-                        } else
+                        } else {
+                            moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                             break;
+                        }
                         distance++;
                     }
                 } while (targetSquare != null);
@@ -456,8 +465,10 @@ public class GameLogic {
                                 moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
                                 if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                     break;
-                            } else
+                            } else {
+                                moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                                 break;
+                            }
                             distance++;
                         }
                     } while (targetSquare != null);
@@ -476,8 +487,10 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
                             if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
-                        } else
+                        } else {
+                            moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                             break;
+                        }
                         distance++;
                     }
                 } while (targetSquare != null);
@@ -492,8 +505,10 @@ public class GameLogic {
                             moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), true));
                             if (!ignoreEnemyKing || !(targetPiece instanceof King) || targetPiece.isWhite() == piece.isWhite())
                                 break;
-                        } else
+                        } else {
+                            moves.add(new RegularMove(piece, targetSquare.getRank(), targetSquare.getFile(), false));
                             break;
+                        }
                         distance++;
                     }
                 } while (targetSquare != null);
@@ -539,6 +554,10 @@ public class GameLogic {
 
     public List<Move> getLegalMoves(Piece piece) {
         List<Move> moves = getBaseMoves(piece, false);
+        moves = moves.stream().filter((Move m) -> {
+            Piece p = board.getSquareByRankFile(m.getRankDest(), m.getFileDest()).getOccupant();
+            return p == null || p.isWhite() != piece.isWhite();
+        }).collect(Collectors.toList());
         // Single check, must capture or block. King handled separately below
         if (checkState == 1 && !(piece instanceof King)) {
             moves = moves.stream().filter((Move move) -> {

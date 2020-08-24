@@ -448,6 +448,7 @@ public class GameLogicTest {
         bishopExpected.add(gameLogic.getBoard().getSquareByNotation("a3"));
         bishopExpected.add(gameLogic.getBoard().getSquareByNotation("c3"));
         bishopExpected.add(gameLogic.getBoard().getSquareByNotation("d2"));
+        bishopExpected.add(gameLogic.getBoard().getSquareByNotation("c5"));
         bishopSquares.sort(squareComparator);
         bishopExpected.sort(squareComparator);
         Assert.assertEquals(bishopExpected, bishopSquares);
@@ -507,6 +508,7 @@ public class GameLogicTest {
         rookExpected.add(gameLogic.getBoard().getSquareByNotation("f6"));
         rookExpected.add(gameLogic.getBoard().getSquareByNotation("f7"));
         rookExpected.add(gameLogic.getBoard().getSquareByNotation("f8"));
+        rookExpected.add(gameLogic.getBoard().getSquareByNotation("f2"));
         rookSquares.sort(squareComparator);
         rookExpected.sort(squareComparator);
         Assert.assertEquals(rookExpected, rookSquares);
@@ -537,6 +539,11 @@ public class GameLogicTest {
         queenExpected.add(gameLogic.getBoard().getSquareByNotation("f4"));
         queenExpected.add(gameLogic.getBoard().getSquareByNotation("g3"));
         queenExpected.add(gameLogic.getBoard().getSquareByNotation("h2"));
+        queenExpected.add(gameLogic.getBoard().getSquareByNotation("d7"));
+        queenExpected.add(gameLogic.getBoard().getSquareByNotation("c8"));
+        queenExpected.add(gameLogic.getBoard().getSquareByNotation("c5"));
+        queenExpected.add(gameLogic.getBoard().getSquareByNotation("b7"));
+        queenExpected.add(gameLogic.getBoard().getSquareByNotation("b8"));
         queenSquares.sort(squareComparator);
         queenExpected.sort(squareComparator);
         Assert.assertEquals(queenExpected, queenSquares);
@@ -605,7 +612,7 @@ public class GameLogicTest {
     must block or capture when in check and not moving king (king move rules remain the same)
      */
     @Test
-    public void getLegalMoves_RegularMove_AllBaseMovesIncluded() {
+    public void getLegalMoves_RegularMove_AllBaseMovesIncludedExceptFriendlies() {
         gameLogic.getBoard().loadBoard("001100r000000000q0k0000000000000Q000rb000000000000000000000000R000K00R");
         // https://lichess.org/editor/r7/2q1k3/8/2Q3rb/8/8/8/R3K2R_b_KQ_-_0_1
         Rook rook = (Rook) gameLogic.getBoard().getSquareByNotation("h1").getOccupant();
@@ -613,7 +620,7 @@ public class GameLogicTest {
         List<Move> baseMoves = gameLogic.getBaseMoves(rook, false);
         List<Move> legalMoves = gameLogic.getLegalMoves(rook);
 
-        Assert.assertEquals(baseMoves.size(), legalMoves.size());
+        Assert.assertEquals(baseMoves.size() - 1, legalMoves.size());
         for (Move move : baseMoves) {
             Assert.assertTrue(baseMoves.stream().anyMatch((Move m) -> m.getRankDest() == move.getRankDest() && m.getFileDest() == move.getFileDest()));
         }
