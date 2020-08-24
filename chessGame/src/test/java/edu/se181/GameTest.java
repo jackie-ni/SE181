@@ -32,7 +32,7 @@ public class GameTest {
         Move move = new RegularMove(pawn, 3, 1, false);
         game.handleIrreversible(move);
         Assert.assertEquals(0, game.halfMoveClock);
-        Assert.assertEquals(2, game.repetitionIndex);
+        Assert.assertEquals(3, game.repetitionIndex);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class GameTest {
         Move move = new RegularMove(knight, 2, 2, true);
         game.handleIrreversible(move);
         Assert.assertEquals(0, game.halfMoveClock);
-        Assert.assertEquals(2, game.repetitionIndex);
+        Assert.assertEquals(3, game.repetitionIndex);
     }
 
     @Test
@@ -49,8 +49,8 @@ public class GameTest {
         King king = (King) game.getBoard().getSquareByNotation("e1").getOccupant();
         Move move = new CastleMove(king, true);
         game.handleIrreversible(move);
-        Assert.assertEquals(0, game.halfMoveClock);
-        Assert.assertEquals(0, game.repetitionIndex);
+        Assert.assertEquals(2, game.halfMoveClock);
+        Assert.assertEquals(3, game.repetitionIndex);
     }
 
     @Test
@@ -58,8 +58,8 @@ public class GameTest {
         Rook rook = (Rook) game.getBoard().getSquareByNotation("a1").getOccupant();
         Move move = new RegularMove(rook, 4, 0, false);
         game.handleIrreversible(move);
-        Assert.assertEquals(0, game.halfMoveClock);
-        Assert.assertEquals(0, game.repetitionIndex);
+        Assert.assertEquals(2, game.halfMoveClock);
+        Assert.assertEquals(3, game.repetitionIndex);
     }
 
     @Test
@@ -67,8 +67,8 @@ public class GameTest {
         King king = (King) game.getBoard().getSquareByNotation("e1").getOccupant();
         Move move = new RegularMove(king, 4, 1, false);
         game.handleIrreversible(move);
-        Assert.assertEquals(0, game.halfMoveClock);
-        Assert.assertEquals(0, game.repetitionIndex);
+        Assert.assertEquals(2, game.halfMoveClock);
+        Assert.assertEquals(3, game.repetitionIndex);
     }
 
     @Test
@@ -148,48 +148,36 @@ public class GameTest {
     @Test
     public void makeMove_ReversibleMove_UpdatesInternals() {
         boolean lastTurn = game.isWhiteTurn();
-        game.halfMoveClock = 2;
-        game.boardStates.add("state1");
-        game.boardStates.add("state2");
-        game.repetitionIndex = 0;
         Knight knight = (Knight) game.getBoard().getSquareByNotation("b1").getOccupant();
         Move move = new RegularMove(knight, 2, 2, false);
         game.makeMove(move);
         Assert.assertTrue(lastTurn != game.isWhiteTurn());
         Assert.assertEquals(3, game.halfMoveClock);
         Assert.assertEquals(0, game.repetitionIndex);
-        Assert.assertEquals(3, game.boardStates.size());
+        Assert.assertEquals(4, game.boardStates.size());
     }
 
     @Test
     public void makeMove_SemiIrreversibleMove_UpdatesInternals() {
         boolean lastTurn = game.isWhiteTurn();
-        game.halfMoveClock = 2;
-        game.boardStates.add("state1");
-        game.boardStates.add("state2");
-        game.repetitionIndex = 0;
         King king = (King) game.getBoard().getSquareByNotation("e1").getOccupant();
         Move move = new CastleMove(king, false);
         game.makeMove(move);
         Assert.assertTrue(lastTurn != game.isWhiteTurn());
         Assert.assertEquals(3, game.halfMoveClock);
-        Assert.assertEquals(2, game.repetitionIndex);
-        Assert.assertEquals(3, game.boardStates.size());
+        Assert.assertEquals(3, game.repetitionIndex);
+        Assert.assertEquals(4, game.boardStates.size());
     }
 
     @Test
     public void makeMove_IrreversibleMove_UpdatesInternals() {
         boolean lastTurn = game.isWhiteTurn();
-        game.halfMoveClock = 2;
-        game.boardStates.add("state1");
-        game.boardStates.add("state2");
-        game.repetitionIndex = 0;
         Knight knight = (Knight) game.getBoard().getSquareByNotation("b1").getOccupant();
         Move move = new RegularMove(knight, 2, 2, true);
         game.makeMove(move);
         Assert.assertTrue(lastTurn != game.isWhiteTurn());
         Assert.assertEquals(1, game.halfMoveClock);
-        Assert.assertEquals(2, game.repetitionIndex);
-        Assert.assertEquals(3, game.boardStates.size());
+        Assert.assertEquals(3, game.repetitionIndex);
+        Assert.assertEquals(4, game.boardStates.size());
     }
 }

@@ -29,7 +29,7 @@ public class GameLogic {
         return board;
     }
 
-    protected boolean getFinished(){
+    protected boolean isFinished(){
         return finished;
     }
 

@@ -46,15 +46,15 @@ public class Game {
     protected void handleIrreversible(Move move) {
         int irreversible = DrawChecker.isIrreversibleMove(move);
         if (irreversible > 0) {
-            halfMoveClock = 0;
-        }
-        if (irreversible == 2) {
             repetitionIndex = boardStates.size();
+        }
+        if (irreversible == 1) {
+            halfMoveClock = 0;
         }
     }
 
     public void handleFinish() {
-        if (logicUnit.isGameFinished()) {
+        if (logicUnit.isFinished()) {
             if (logicUnit.getFinishState() == -1) {
                 // TODO: black victory
             } else if (logicUnit.getFinishState() == 1) {
