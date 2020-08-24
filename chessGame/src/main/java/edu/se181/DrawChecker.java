@@ -8,7 +8,7 @@ public class DrawChecker {
 
     public DrawChecker(){}
 
-    static public int isIrreversibleMove(Move move){
+    public static int isIrreversibleMove(Move move){
         Piece piece = move.getPiece();
         if (piece instanceof Pawn || move.isCapture()){
             return 1;
@@ -23,23 +23,42 @@ public class DrawChecker {
         return 0;
     }
 
-    static public boolean isThreefoldRepetition(List<String> boardStateList, int irreversibleMoveIndex){
-        HashMap<String, Integer> boardStateMap = new HashMap<>();
+    public static boolean isThreefoldRepetition(List<String> boardStateList, int irreversibleMoveIndex){
+        HashMap<String, Integer> whiteBoardStateMap = new HashMap<>();
+        HashMap<String, Integer> blackBoardStateMap = new HashMap<>();
+        boolean checkWhite;
+        String boardState;
+
         if (boardStateList.size() < 3){
             return false;
         }
-        for(String boardState : boardStateList.subList(irreversibleMoveIndex, boardStateList.size()-1)){
-            boardStateMap.putIfAbsent(boardState, 1);
-            if (boardStateMap.containsKey(boardState)){
-                if (boardStateMap.get(boardState) == 2) {
+        for(int i = irreversibleMoveIndex; i < boardStateList.size(); i++){
+            boardState = boardStateList.get(i);
+            checkWhite = i  % 2 == 0;
+
+            if (checkWhite){
+                whiteBoardStateMap = updateHashMap(whiteBoardStateMap, boardState);
+                if (whiteBoardStateMap.get(boardState) == 2){
                     return true;
                 }
-                else{
-                    boardStateMap.replace(boardState, boardStateMap.get(boardState)+1);
+            }else{
+                blackBoardStateMap = updateHashMap(blackBoardStateMap, boardState);
+                if (blackBoardStateMap.get(boardState) == 2){
+                    return true;
                 }
             }
         }
         return false;
+    }
+
+    private static HashMap<String, Integer> updateHashMap(HashMap<String, Integer> hashMap, String boardState){
+        if (hashMap.containsKey(boardState)){
+            hashMap.replace(boardState, hashMap.get(boardState)+1);
+        }
+        else{
+            hashMap.put(boardState, 1);
+        }
+        return hashMap;
     }
 
     public static boolean isDeadPosition(Board board){
@@ -77,22 +96,15 @@ public class DrawChecker {
             }
         }
 
-        if (whitePiecesSize == 1 && whitePieces.get(0) instanceof King){
-            if (blackPiecesSize == 1 && blackPieces.get(0) instanceof King){
-                //king vs king
-                return true;
-            }
-            else if (blackPiecesSize == 2){
-                if (blackKnight != null || blackBishop != null){
-                    //king vs king and bishop
-                    //king vs king and knight
-                    return true;
-                }
-            }
-        } else if (whitePiecesSize == 2 && blackPiecesSize == 2) {
+        if (whitePiecesSize == 1 && blackPiecesSize == 1){
+            //king vs king
+            return true;
+        }
+
+        if (whitePiecesSize == 2 && blackPiecesSize == 2) {
             if (whiteBishop != null && blackBishop != null) {
                 boolean whiteBishopTileColor = (whiteBishop.getRank() + whiteBishop.getFile()) % 2 == 0;
-                boolean blackBishopTileColor = (whiteBishop.getRank() + whiteBishop.getFile()) % 2 == 0;
+                boolean blackBishopTileColor = (blackBishop.getRank() + blackBishop.getFile()) % 2 == 0;
 
                 if (whiteBishopTileColor == blackBishopTileColor) {
                     //king and bishop vs king and bishop with same tile color bishops
@@ -103,9 +115,19 @@ public class DrawChecker {
 
         if (blackPiecesSize == 1 && whitePiecesSize == 2) {
             if (whiteBishop != null || whiteKnight != null) {
+                //king vs king and bishop
+                //king vs king and knight
                 return true;
             }
         }
+        if (blackPiecesSize == 2 && whitePiecesSize == 1){
+            if (blackKnight != null || blackBishop != null){
+                //king vs king and bishop
+                //king vs king and knight
+                return true;
+            }
+        }
+
         return false;
     }
 }

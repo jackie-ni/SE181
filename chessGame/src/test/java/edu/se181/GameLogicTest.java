@@ -47,7 +47,9 @@ public class GameLogicTest {
     public void evaluateDrawConditionsExceptStalemate_GivenThreeFoldRepetition_SetsDrawAndFinishStates(){
         List<String> boardStates = new ArrayList<>();
         boardStates.add("string1");
+        boardStates.add("string2");
         boardStates.add("string1");
+        boardStates.add("string2");
         boardStates.add("string1");
 
         gameLogic.evaluateDrawConditionsExceptStalemate(0, 0, boardStates);
