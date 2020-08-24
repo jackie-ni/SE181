@@ -97,8 +97,7 @@ public class DrawCheckerTest {
     @Test
     public void isThreefoldRepetition_GivenNoRepetitionAndFullList_ReturnsFalse() {
         List<String> boardStateList = new ArrayList<String>();
-        boardStateList.add("string1");
-        boardStateList.add("string2");
+        boardStateList.add("string1");boardStateList.add("string2");
         boardStateList.add("string3");
 
         int index = 0;
@@ -111,10 +110,8 @@ public class DrawCheckerTest {
     @Test
     public void isThreefoldRepetition_GivenRepetitionAndFullList_ReturnsTrue() {
         List<String> boardStateList = new ArrayList<String>();
-        boardStateList.add("string1");
-        boardStateList.add("string2");
-        boardStateList.add("string1");
-        boardStateList.add("string3");
+        boardStateList.add("string1");boardStateList.add("string2");
+        boardStateList.add("string1");boardStateList.add("string3");
         boardStateList.add("string1");
 
         int index = 0;
@@ -127,12 +124,9 @@ public class DrawCheckerTest {
     @Test
     public void isThreefoldRepetition_GivenRepetitionAndSubList_ReturnsTrue() {
         List<String> boardStateList = new ArrayList<String>();
-        boardStateList.add("string1");
-        boardStateList.add("string2");
-        boardStateList.add("string3");
-        boardStateList.add("string2");
-        boardStateList.add("string3");
-        boardStateList.add("string2");
+        boardStateList.add("string1");boardStateList.add("string2");
+        boardStateList.add("string3");boardStateList.add("string2");
+        boardStateList.add("string3");boardStateList.add("string2");
 
         int index = 1;
 
@@ -142,20 +136,18 @@ public class DrawCheckerTest {
     }
 
     @Test
-    public void isThreefoldRepetition_GivenNoRepetitionAndSubList_ReturnsTrue() {
+    public void isThreefoldRepetition_GivenNoRepetitionAndSubList_ReturnsFalse() {
         List<String> boardStateList = new ArrayList<String>();
-        boardStateList.add("string1");
-        boardStateList.add("string2");
-        boardStateList.add("string3");
-        boardStateList.add("string2");
-        boardStateList.add("string3");
-        boardStateList.add("string2");
+        boardStateList.add("string1");boardStateList.add("string2");
+        boardStateList.add("string3");boardStateList.add("string2");
+        boardStateList.add("string3");boardStateList.add("string1");
+        boardStateList.add("string2");boardStateList.add("string1");
 
         int index = 1;
 
         boolean result = DrawChecker.isThreefoldRepetition(boardStateList, index);
 
-        Assert.assertTrue(result);
+        Assert.assertFalse(result);
     }
 
     @Test

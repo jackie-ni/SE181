@@ -38,12 +38,12 @@ public class DrawChecker {
 
             if (checkWhite){
                 whiteBoardStateMap = updateHashMap(whiteBoardStateMap, boardState);
-                if (whiteBoardStateMap.get(boardState) == 2){
+                if (whiteBoardStateMap.get(boardState) == 3){
                     return true;
                 }
             }else{
                 blackBoardStateMap = updateHashMap(blackBoardStateMap, boardState);
-                if (blackBoardStateMap.get(boardState) == 2){
+                if (blackBoardStateMap.get(boardState) == 3){
                     return true;
                 }
             }
