@@ -15,9 +15,4 @@ public class Pawn extends Piece {
     public void setEnPassantable (boolean ep) {
         enPassantable = ep;
     }
-
-    public void firstMovePerformed() {
-        super.firstMovePerformed();
-        setEnPassantable(true);
-    }
 }
