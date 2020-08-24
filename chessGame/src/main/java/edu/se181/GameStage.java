@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.Parent;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class GameStage {
     public static ArrayList<Sprite> capturedBlackPieces;
     public static HBox top, bottom;
     public static CaptureBox left, right;
+    private static Text turnText;
 
     public static void launch(boolean white) {
         BorderPane layout = new BorderPane();
@@ -45,10 +47,21 @@ public class GameStage {
         //TODO: Implement Surrender/Draw button functions
         Button surrender = new Button("Surrender");
         Button draw = new Button("Draw");
+        turnText = new Text("White's Turn");
+        top.setAlignment(Pos.CENTER);
+        top.getChildren().add(turnText);
         bottom.setAlignment(Pos.CENTER);
         bottom.getChildren().addAll(surrender, draw);
 
         MainApp.Companion.updateStage(layout);
+    }
+
+    public static void updateTurnText(boolean whiteTurn) {
+        if (whiteTurn) {
+            turnText.setText("White's Turn");
+        } else {
+            turnText.setText("Black's Turn");
+        }
     }
 
     public static void endGame(int winner, int drawCondition) {
