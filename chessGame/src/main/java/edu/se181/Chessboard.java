@@ -218,24 +218,24 @@ public class Chessboard {
             //move rook
             if(((CastleMove) move).isKingSide){
                 if(whiteTurn) {
-                    Sprite rook = whitePieces.get(7);
+                    Sprite rook = whitePieces.stream().filter((Sprite s) -> s.getXPos() == 7 && s.getYPos() == 7).collect(Collectors.toList()).get(0);
                     GridPane.setConstraints(rook,5,7);
                     rook.setPosition(5,7);
                 }
                 else{
-                    Sprite rook = blackPieces.get(7);
+                    Sprite rook = blackPieces.stream().filter((Sprite s) -> s.getXPos() == 7 && s.getYPos() == 0).collect(Collectors.toList()).get(0);
                     GridPane.setConstraints(rook,5,0);
                     rook.setPosition(5,0);
                 }
             }
             else{
                 if(whiteTurn){
-                    Sprite rook = whitePieces.get(0);
+                    Sprite rook = whitePieces.stream().filter((Sprite s) -> s.getXPos() == 0 && s.getYPos() == 7).collect(Collectors.toList()).get(0);
                     GridPane.setConstraints(rook,3,7);
                     rook.setPosition(3,7);
                 }
                 else{
-                    Sprite rook = blackPieces.get(0);
+                    Sprite rook = blackPieces.stream().filter((Sprite s) -> s.getXPos() == 0 && s.getYPos() == 0).collect(Collectors.toList()).get(0);
                     GridPane.setConstraints(rook,3,0);
                     rook.setPosition(3,0);
                 }

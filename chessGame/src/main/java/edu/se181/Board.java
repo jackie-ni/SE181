@@ -91,13 +91,13 @@ public class Board {
                 if (piece.isWhite()){
                     blackPieces = blackPieces.stream()
                                     .filter(p ->
-                                            p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                            p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                                     .collect(Collectors.toList());
                 }
                 else {
                     whitePieces = whitePieces.stream()
                             .filter(p ->
-                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                    p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                             .collect(Collectors.toList());
                 }
             }
@@ -133,27 +133,27 @@ public class Board {
                 if (piece.isWhite()){
                     blackPieces = blackPieces.stream()
                             .filter(p ->
-                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                    p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                             .collect(Collectors.toList());
                 }
                 else {
                     whitePieces = whitePieces.stream()
                             .filter(p ->
-                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                    p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                             .collect(Collectors.toList());
                 }
             }
             if (piece.isWhite()){
                 whitePieces = whitePieces.stream()
                         .filter(p ->
-                                p.getFile() != piece.getFile() && p.getRank() != piece.getRank())
+                                p.getFile() != piece.getFile() || p.getRank() != piece.getRank())
                         .collect(Collectors.toList());
                 whitePieces.add(promotedPiece);
             }
             else {
                 blackPieces = blackPieces.stream()
                         .filter(p ->
-                                p.getFile() != piece.getFile() && p.getRank() != piece.getRank())
+                                p.getFile() != piece.getFile() || p.getRank() != piece.getRank())
                         .collect(Collectors.toList());
                 blackPieces.add(promotedPiece);
             }
