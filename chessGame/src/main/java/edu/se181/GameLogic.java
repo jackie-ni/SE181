@@ -29,8 +29,20 @@ public class GameLogic {
         return board;
     }
 
-    public void analyzeGameState(boolean lastMoveWhite) {
-        evaluateDrawConditionsExceptStalemate();
+    protected boolean getFinished(){
+        return finished;
+    }
+
+    protected int getFinishState(){
+        return finishState;
+    }
+
+    protected int getDrawCondition(){
+        return drawCondition;
+    }
+
+    public void analyzeGameState(boolean lastMoveWhite, int halfMoveClock, int repetitionIndex, List<String> boardStates) {
+        evaluateDrawConditionsExceptStalemate(halfMoveClock, repetitionIndex, boardStates);
         findChecks(lastMoveWhite);
         determinePins(lastMoveWhite);
         boolean hasMove = hasLegalMove(!lastMoveWhite);
@@ -45,8 +57,22 @@ public class GameLogic {
         }
     }
 
-    protected void evaluateDrawConditionsExceptStalemate() {
-        // TODO: Implement in issue 30
+    protected void evaluateDrawConditionsExceptStalemate(int halfMoveClock, int repetitionIndex, List<String> boardStates) {
+        if (DrawChecker.isDeadPosition(board)){
+            finished = true;
+            finishState = 0;
+            drawCondition = 1;
+        }
+        else if (DrawChecker.isThreefoldRepetition(boardStates, repetitionIndex)){
+            finished = true;
+            finishState = 0;
+            drawCondition = 2;
+        }
+        else if (halfMoveClock == 100){
+            finished = true;
+            finishState = 0;
+            drawCondition = 3;
+        }
     }
 
     protected void findChecks(boolean lastMoveWhite) {
