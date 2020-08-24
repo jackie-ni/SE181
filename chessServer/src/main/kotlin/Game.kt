@@ -31,6 +31,13 @@ data class Game (
         return input != null && input == password
     }
 
+    fun disconnectPlayers() {
+        playerMap.keys.forEach {session ->
+            session.session.close()
+            removePlayer(session)
+        }
+    }
+
     fun sendMessage(ctx: WsMessageContext) {
         playerMap.keys.forEach { session ->
             if (session != ctx)

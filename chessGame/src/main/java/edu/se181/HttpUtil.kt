@@ -3,6 +3,8 @@ package edu.se181
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import javafx.application.Platform
+import javafx.fxml.FXMLLoader
+import javafx.scene.Parent
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft_10
 import org.java_websocket.drafts.Draft_17
@@ -24,11 +26,12 @@ object HttpUtil {
     private lateinit var wsClient: WebSocketClient
 
     var game: Game? = null
+    var connectedGame: String = ""
 
     fun connect(gameId: String, password: String = "") {
-        wsClient = NewWebSocketClient("$WEBSOCkET_URL/$gameId?password=$password")
-        println("$WEBSOCkET_URL/$gameId?password=$password")
+        wsClient = NewWebSocketClient(gameId, password)
         wsClient.connect()
+        connectedGame = gameId
     }
 
     fun getGames(): List<MatchProperties> {
@@ -50,6 +53,18 @@ object HttpUtil {
         return gson.fromJson<MatchProperties>(response.body(), MatchProperties::class.java).gameId
     }
 
+    fun deleteGame() {
+        if (this::wsClient.isInitialized) {
+            wsClient.close()
+        }
+
+        val request = HttpRequest.newBuilder()
+                .uri(URI.create("$GAMES_URL/$connectedGame"))
+                .DELETE()
+                .build()
+        HttpClient.newBuilder().build().send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
     fun checkPassword(gameId: String, password: String): Boolean {
         val request = HttpRequest.newBuilder()
                 .uri(URI.create("$GAMES_URL/$gameId?password=$password"))
@@ -64,13 +79,17 @@ object HttpUtil {
         wsClient.send(message)
     }
 
-    private class NewWebSocketClient(url: String) : WebSocketClient(URI(url), Draft_17()) {
+    private class NewWebSocketClient(gameId: String, password: String) :
+            WebSocketClient(URI("$WEBSOCkET_URL/$gameId?password=$password"), Draft_17()) {
+
         override fun onOpen(handshakedata: ServerHandshake?) {
             println("Opened")
         }
 
         override fun onClose(code: Int, reason: String?, remote: Boolean) {
             println("Closed because: $reason")
+            val root = FXMLLoader.load<Parent>(javaClass.getResource(StringSources.MAIN_MENU_SCREEN_PATH))
+            MainApp.updateStage(root)
         }
 
         override fun onMessage(message: String?) {
