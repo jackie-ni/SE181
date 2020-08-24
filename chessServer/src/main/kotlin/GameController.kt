@@ -43,6 +43,7 @@ object GameController {
             return
         }
 
+        games.remove(game)
         game.disconnectPlayers()
     }
 
