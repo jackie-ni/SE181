@@ -4,12 +4,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.*;
 import javafx.scene.Parent;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 //Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
@@ -21,7 +23,8 @@ public class GameStage {
 
     public static void launch(boolean white) {
         BorderPane layout = new BorderPane();
-        Chessboard cb = new Chessboard(white);
+        Game game = new Game(white);
+        Chessboard cb = new Chessboard(game);
         GridPane chessBoard = cb.chessBoard;
         capturedWhitePieces = cb.getCapturedWhitePieces();
         capturedBlackPieces = cb.blackPieces;
@@ -44,9 +47,14 @@ public class GameStage {
         layout.setLeft(left);
         layout.setRight(right);
 
-        //TODO: Implement Surrender/Draw button functions
         Button surrender = new Button("Surrender");
+        surrender.setOnAction(e -> {
+            game.resign();
+        });
         Button draw = new Button("Draw");
+        draw.setOnAction(e -> {
+            game.offerDraw();
+        });
         turnText = new Text("White's Turn");
         top.setAlignment(Pos.CENTER);
         top.getChildren().add(turnText);
@@ -71,8 +79,12 @@ public class GameStage {
         String contentText;
         if (winner == -1)
             contentText = "Black is the winner!";
+        else if (winner == -2)
+            contentText = "White forfeited!";
         else if (winner == 1)
             contentText = "White is the winner!";
+        else if (winner == 2)
+            contentText = "Black forfeited!";
         else {
             if (drawCondition == 0)
                 contentText = "Draw by stalemate!";
@@ -96,6 +108,19 @@ public class GameStage {
         }
         MainApp.Companion.updateStage(root);
         HttpUtil.INSTANCE.deleteGame();
+    }
+
+    public static boolean offerDraw() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Draw Offer");
+        alert.setHeaderText("Your opponent has offered a draw.");
+        alert.setContentText("Do you want to accept the draw?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

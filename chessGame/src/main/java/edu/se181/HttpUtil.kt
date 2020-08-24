@@ -97,8 +97,8 @@ object HttpUtil {
 
             when (message2.type) {
                 "move" -> Platform.runLater(Runnable { game?.makeMove(game?.logicUnit?.convertToMove(message2.data)) })
-                "resign" -> println("resign") //TODO: handle resign message types
-                "draw" -> println("draw") //TODO: handle draw message types
+                "resign" -> Platform.runLater(Runnable { game?.handleResign() }) //TODO: handle resign message types
+                "draw" -> Platform.runLater(Runnable { game?.handleDraw(message2.data) }) //TODO: handle draw message types
                 "end" -> println("end") //TODO: handle end message types
                 else -> println("This line should never be printed")
             }

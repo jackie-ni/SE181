@@ -8,6 +8,6 @@ public class ChessboardTest {
 
     @Before
     public void beforeEach() {
-        chessboard = new Chessboard(true);
+        chessboard = new Chessboard(new Game(true));
     }
 }

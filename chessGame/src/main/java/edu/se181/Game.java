@@ -15,6 +15,7 @@ public class Game {
     protected int halfMoveClock;
     protected int repetitionIndex;
     private Chessboard chessboard;
+    private boolean deletedGame;
 
     public Game(boolean white) {
         board = new Board();
@@ -27,6 +28,7 @@ public class Game {
         repetitionIndex = 0;
         whiteTurn = true;
         playerIsWhite = white;
+        deletedGame = false;
     }
 
     public Board getBoard() {
@@ -62,8 +64,11 @@ public class Game {
     public void handleFinish() {
         if (!logicUnit.isFinished())
             return;
+        if ((isPlayerWhite() != isWhiteTurn()) && !deletedGame) {
+            HttpUtil.INSTANCE.deleteGame();
+            deletedGame = true;
+        }
         GameStage.endGame(logicUnit.finishState, logicUnit.drawCondition);
-        // TODO: tell server to end game
     }
 
     public void makeMove(Move move) {
@@ -96,5 +101,37 @@ public class Game {
         if (mover.isWhite() != isPlayerWhite())
             return new ArrayList<>();
         return logicUnit.getLegalMoves(mover);
+    }
+
+    public void offerDraw() {
+        HttpUtil.INSTANCE.sendMessage("draw", "offer");
+    }
+
+    public void handleDraw(String status) {
+        if (status.equals("offer")) {
+            boolean end = GameStage.offerDraw();
+            if (end) {
+                HttpUtil.INSTANCE.sendMessage("draw", "accept");
+                GameStage.endGame(0, 4);
+            } else {
+                HttpUtil.INSTANCE.sendMessage("draw", "reject");
+            }
+        } else if (status.equals("accept")) {
+            HttpUtil.INSTANCE.deleteGame();
+            deletedGame = true;
+            GameStage.endGame(0, 4);
+        }
+    }
+
+    public void resign() {
+        HttpUtil.INSTANCE.sendMessage("resign", "");
+        deletedGame = true;
+        GameStage.endGame(2 * (playerIsWhite ? -1 : 1), 0);
+    }
+
+    public void handleResign() {
+        HttpUtil.INSTANCE.deleteGame();
+        deletedGame = true;
+        GameStage.endGame(2 * (playerIsWhite ? 1 : -1), 0);
     }
 }
