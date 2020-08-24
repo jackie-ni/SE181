@@ -15,6 +15,7 @@ class JavalinApp(private val port: Int) {
                 get(GameController::getGames)
                 post(GameController::createGame)
                 delete(GameController::deleteGame)
+                get(":gameId", GameController::checkPassword)
             }
 
             ws("games/:gameId") { ws ->
