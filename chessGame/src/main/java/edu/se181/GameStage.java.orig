@@ -47,17 +47,21 @@ public class GameStage {
         layout.setLeft(left);
         layout.setRight(right);
 
+        //TODO: Implement Surrender/Draw button functions
         Button surrender = new Button("Surrender");
         surrender.setOnAction(e -> {
             game.resign();
         });
         Button draw = new Button("Draw");
+<<<<<<< HEAD
         draw.setOnAction(e -> {
             game.offerDraw();
         });
+=======
         turnText = new Text("White's Turn");
         top.setAlignment(Pos.CENTER);
         top.getChildren().add(turnText);
+>>>>>>> master
         bottom.setAlignment(Pos.CENTER);
         bottom.getChildren().addAll(surrender, draw);
 

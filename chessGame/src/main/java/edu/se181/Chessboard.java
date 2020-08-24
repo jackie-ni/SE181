@@ -34,6 +34,7 @@ public class Chessboard {
     private Game game;
 
     public Chessboard(Game game){
+        this.game = game;
         setPlayerIsWhite(game.isPlayerWhite());
         createChessBoard();
         HttpUtil.INSTANCE.setGame(game);
