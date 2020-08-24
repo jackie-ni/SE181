@@ -1,32 +1,54 @@
 package edu.se181;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
+import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+
+//Contain the chessboard, capture piece boxes, draw/surrender buttons
 public class GameStage {
-    private static final String CHESS_GAME = "Chess Game";
-    public static void launch(Stage stage) {
-        stage.setTitle(CHESS_GAME);
+    public static ArrayList<Sprite> capturedWhitePieces;
+    public static ArrayList<Sprite> capturedBlackPieces;
+    public static HBox top, bottom;
+    public static CaptureBox left, right;
 
-        GridPane chessBoard = new GridPane();
+    public static void launch() {
+        BorderPane layout = new BorderPane();
+        Chessboard cb = new Chessboard();
+        GridPane chessBoard = cb.chessBoard;
+        capturedWhitePieces = cb.getCapturedWhitePieces();
+        capturedBlackPieces = cb.blackPieces;
 
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                Rectangle square = new Rectangle(50, 50);
+        chessBoard.setGridLinesVisible(true);
+        top = new HBox();
+        bottom = new HBox(20);
+        left = cb.whiteCaptured;
+        right = cb.blackCaptured;
 
-                Color color = Color.GRAY;
-                if ((row + col) % 2 == 0) {
-                    color = Color.BEIGE;
-                }
-                square.setFill(color);
-                chessBoard.add(square, col, row);
-            }
-        }
-        Scene scene = new Scene(chessBoard, 500, 500);
-        stage.setScene(scene);
-        stage.show();
+        left.setPrefSize(100,600);
+        right.setPrefSize(100,600);
+        top.setPrefSize(600,100);
+        bottom.setPrefSize(600,100);
+
+//        for(Sprite pieces: capturedBlackPieces){
+//            right.getChildren().add(pieces);
+//        }
+
+        layout.setCenter(chessBoard);
+        layout.setTop(top);
+        layout.setBottom(bottom);
+        layout.setLeft(left);
+        layout.setRight(right);
+
+        //TODO: Implement Surrender/Draw button functions
+        Button surrender = new Button("Surrender");
+        Button draw = new Button("Draw");
+        bottom.setAlignment(Pos.CENTER);
+        bottom.getChildren().addAll(surrender, draw);
+
+        MainApp.Companion.updateStage(layout);
     }
+
 }
