@@ -1,6 +1,7 @@
 package edu.se181
 
 object StringSources {
+
     //FXML Paths
     val ABOUT_SCREEN_PATH = "/fxml/AboutScreen.fxml"
     val SPLASH_SCREEN_PATH = "/fxml/SplashScreen.fxml"
@@ -20,6 +21,20 @@ object StringSources {
     val WHITE_PAWN = "images/whitePawn.png"
     val WHITE_QUEEN = "images/whiteQueen.png"
     val WHITE_ROOK = "images/whiteRook.png"
+
+    //Alternative Sprite Paths
+    val tBLACK_BISHOP = "/images/tBlackBishop.png"
+    val tBLACK_KING = "/images/tBlackKing.png"
+    val tBLACK_KNIGHT = "/images/tBlackKnight.png"
+    val tBLACK_PAWN = "/images/tBlackPawn.png"
+    val tBLACK_QUEEN = "/images/tBlackQueen.png"
+    val tBLACK_ROOK = "/images/tBlackRook.png"
+    val tWHITE_BISHOP = "/images/tWhiteBishop.png"
+    val tWHITE_KING = "/images/tWhiteKing.png"
+    val tWHITE_KNIGHT = "/images/tWhiteKnight.png"
+    val tWHITE_PAWN = "/images/tWhitePawn.png"
+    val tWHITE_QUEEN = "/images/tWhiteQueen.png"
+    val tWHITE_ROOK = "/images/tWhiteRook.png"
 
     //UI Strings
     val CHESS = "Chess"
