@@ -6,6 +6,19 @@ import javafx.scene.image.ImageView;
 
 public class Sprite extends ImageView {
     public Image sprite;
+    private int x;
+    private int y;
+
+    public void setPosition(int x,int y){
+        this.x = x;
+        this.y = y;
+    }
+    public int getXPos(){
+        return x;
+    }
+    public int getYPos(){
+        return y;
+    }
 
     Sprite(Image sprite){
         super(sprite);

@@ -1,5 +1,6 @@
 package edu.se181;
 
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -8,6 +9,8 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 //Visual creation of the chessboard
 public class Chessboard {
@@ -15,7 +18,8 @@ public class Chessboard {
     final int[] original = {0,0};
     final int[] clicked = {0,0};    //row,col in GridPane (chessboard) where user clicked
 
-    public ImageView selectedPiece = null;
+    public Sprite selectedPiece = null;
+    public List<Move> selectedLegalMoves = new ArrayList<>();
     public GridPane chessBoard;
     public ArrayList<Sprite> blackPieces = new ArrayList<>();
     public ArrayList<Sprite> whitePieces = new ArrayList<>();
@@ -24,15 +28,16 @@ public class Chessboard {
     public CaptureBox whiteCaptured = new CaptureBox();
     public CaptureBox blackCaptured = new CaptureBox();
     private boolean whiteTurn = true;
+    private Game game = new Game();
 
     public Chessboard(){
         createChessBoard();
     }
 
-    public void setSelectedPiece(ImageView piece){
+    public void setSelectedPiece(Sprite piece){
         this.selectedPiece = piece;
     }
-    public ImageView getSelectedPiece(){
+    public Sprite getSelectedPiece(){
         return this.selectedPiece;
     }
     public ArrayList<Sprite> getCapturedWhitePieces(){
@@ -40,6 +45,12 @@ public class Chessboard {
     }
     public ArrayList<Sprite> getCapturedBlackPieces(){
         return this.capturedBlackPieces;
+    }
+    public void setSelectedLegalMoves(List<Move> moves){
+        this.selectedLegalMoves=moves;
+    }
+    public List<Move> getSelectedLegalMoves(){
+        return this.selectedLegalMoves;
     }
 
     public void createChessBoard() {
@@ -138,13 +149,28 @@ public class Chessboard {
         }
 
         for(Sprite sprites: blackPieces){
+            sprites.setPosition(GridPane.getColumnIndex(sprites),GridPane.getRowIndex(sprites));
             sprites.setOnMouseClicked(e->{
-                setSelectedPiece(sprites);
+                if(whiteTurn && whitePieces.contains(getSelectedPiece())){
+                    move(sprites.getXPos(),sprites.getYPos());
+                }
+                else if (!whiteTurn){
+                    setSelectedPiece(sprites);
+                    setSelectedLegalMoves(getLegalMoves(sprites));
+                }
+
             });
         }
         for(Sprite sprites: whitePieces){
+            sprites.setPosition(GridPane.getColumnIndex(sprites),GridPane.getRowIndex(sprites));
             sprites.setOnMouseClicked(e->{
-                setSelectedPiece(sprites);
+                if(!whiteTurn && blackPieces.contains(getSelectedPiece())){
+                    move(sprites.getXPos(),sprites.getYPos());
+                }
+                else if (whiteTurn){
+                    setSelectedPiece(sprites);
+                    setSelectedLegalMoves(getLegalMoves(sprites));
+                }
             });
         }
         board.getChildren().addAll(blackPieces);
@@ -155,6 +181,11 @@ public class Chessboard {
     public void move(int x, int y){
         if(getSelectedPiece()==null || (whiteTurn && blackPieces.contains(getSelectedPiece())) ||
                 (!whiteTurn && whitePieces.contains(getSelectedPiece()))){
+            return ;
+        }
+        if (getSelectedLegalMoves().stream().noneMatch((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x)) {
+            setSelectedPiece(null);
+            getSelectedLegalMoves().clear();
             return ;
         }
         if(whiteTurn){
@@ -171,9 +202,53 @@ public class Chessboard {
                 }
             }
         }
-        //TODO Add check for legality here
-        GridPane.setConstraints(getSelectedPiece(),x,y);
+        Move move = getSelectedLegalMoves().stream().filter((Move m) -> m.getRankDest() == 7 - y && m.getFileDest() == x).collect(Collectors.toList()).get(0);
+        if (move instanceof EnPassantMove) {
+            if (whiteTurn) {
+                Sprite pawn = blackPieces.stream().filter((Sprite s) -> s.getXPos() == x && s.getYPos() == y + 1).collect(Collectors.toList()).get(0);
+                remove(pawn);
+            } else {
+                Sprite pawn = whitePieces.stream().filter((Sprite s) -> s.getXPos() == x && s.getYPos() == y - 1).collect(Collectors.toList()).get(0);
+                remove(pawn);
+            }
+        }
+        game.makeMove(move);
+
+        if(move instanceof CastleMove){
+            //move rook
+            if(((CastleMove) move).isKingSide){
+                if(whiteTurn) {
+                    Sprite rook = whitePieces.stream().filter((Sprite s) -> s.getXPos() == 7 && s.getYPos() == 7).collect(Collectors.toList()).get(0);
+                    GridPane.setConstraints(rook,5,7);
+                    rook.setPosition(5,7);
+                }
+                else{
+                    Sprite rook = blackPieces.stream().filter((Sprite s) -> s.getXPos() == 7 && s.getYPos() == 0).collect(Collectors.toList()).get(0);
+                    GridPane.setConstraints(rook,5,0);
+                    rook.setPosition(5,0);
+                }
+            }
+            else{
+                if(whiteTurn){
+                    Sprite rook = whitePieces.stream().filter((Sprite s) -> s.getXPos() == 0 && s.getYPos() == 7).collect(Collectors.toList()).get(0);
+                    GridPane.setConstraints(rook,3,7);
+                    rook.setPosition(3,7);
+                }
+                else{
+                    Sprite rook = blackPieces.stream().filter((Sprite s) -> s.getXPos() == 0 && s.getYPos() == 0).collect(Collectors.toList()).get(0);
+                    GridPane.setConstraints(rook,3,0);
+                    rook.setPosition(3,0);
+                }
+            }
+            //move king
+            GridPane.setConstraints(getSelectedPiece(),x,y);
+            System.out.println("here");
+        }
+
+        GridPane.setConstraints(getSelectedPiece(), x, y);
+        getSelectedPiece().setPosition(x, y);
         setSelectedPiece(null);
+        getSelectedLegalMoves().clear();
         whiteTurn = !whiteTurn;
     }
 
@@ -200,6 +275,18 @@ public class Chessboard {
         newSquare.setBorder(new Border(new BorderStroke(Color.BLUE,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         chessBoard.add(newSquare,x,y);
+    }
+
+    public List<Move> getLegalMoves(Sprite sprite){
+        List<Move> moves = game.getLegalMoves(7-sprite.getYPos(),sprite.getXPos());
+        if (moves.isEmpty())
+            System.out.println("No moves"); // debug
+        for(Move m : moves) {
+            System.out.print((char) (m.getFileDest() + 97));
+            System.out.println((char) (m.getRankDest() + 49));
+        }
+        System.out.println("----");
+        return moves;
     }
 
 }

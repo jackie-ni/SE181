@@ -91,19 +91,25 @@ public class Board {
                 if (piece.isWhite()){
                     blackPieces = blackPieces.stream()
                                     .filter(p ->
-                                            p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                            p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                                     .collect(Collectors.toList());
                 }
                 else {
                     whitePieces = whitePieces.stream()
                             .filter(p ->
-                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                    p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                             .collect(Collectors.toList());
                 }
             }
 
+            if(piece instanceof Pawn){
+                if (Math.abs(piece.getRank() - move.getRankDest()) == 2){
+                    ((Pawn) piece).setEnPassantable(true);
+                }
+            }
+
             squares[7-piece.getRank()][piece.getFile()].setOccupant(null);
-            squares[7-move.getRankDest()][piece.getFile()].setOccupant(piece);
+            squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
 
             piece.firstMovePerformed();
         }
@@ -131,27 +137,27 @@ public class Board {
                 if (piece.isWhite()){
                     blackPieces = blackPieces.stream()
                             .filter(p ->
-                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                    p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                             .collect(Collectors.toList());
                 }
                 else {
                     whitePieces = whitePieces.stream()
                             .filter(p ->
-                                    p.getRank() != move.getRankDest() && p.getFile() != move.getFileDest())
+                                    p.getRank() != move.getRankDest() || p.getFile() != move.getFileDest())
                             .collect(Collectors.toList());
                 }
             }
             if (piece.isWhite()){
                 whitePieces = whitePieces.stream()
                         .filter(p ->
-                                p.getFile() != piece.getFile() && p.getRank() != piece.getRank())
+                                p.getFile() != piece.getFile() || p.getRank() != piece.getRank())
                         .collect(Collectors.toList());
                 whitePieces.add(promotedPiece);
             }
             else {
                 blackPieces = blackPieces.stream()
                         .filter(p ->
-                                p.getFile() != piece.getFile() && p.getRank() != piece.getRank())
+                                p.getFile() != piece.getFile() || p.getRank() != piece.getRank())
                         .collect(Collectors.toList());
                 blackPieces.add(promotedPiece);
             }
@@ -181,6 +187,20 @@ public class Board {
             squares[7-move.getRankDest()][move.getFileDest()].setOccupant(piece);
 
             piece.firstMovePerformed();
+        }
+
+        if (piece.isWhite()){
+            for (Piece blackPiece: blackPieces){
+                if(blackPiece instanceof Pawn){
+                    ((Pawn)(blackPiece)).setEnPassantable(false);
+                }
+            }
+        }else{
+            for (Piece whitePiece: whitePieces){
+                if(whitePiece instanceof Pawn){
+                    ((Pawn)(whitePiece)).setEnPassantable(false);
+                }
+            }
         }
     }
 

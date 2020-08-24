@@ -82,6 +82,42 @@ public class BoardTest {
     }
 
     @Test
+    public void makeMove_GivenRegularPawnMoveForward2_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(1, 0, true);
+
+        boardSquares[6][0].setOccupant(pawn);
+
+        Move move = new RegularMove(pawn, 3, 0, false);
+
+        board.makeMove(move);
+
+        Assert.assertTrue(pawn.isEnPassantable());
+        Assert.assertEquals(boardSquares[4][0].getOccupant(), pawn);
+        Assert.assertNull(boardSquares[6][0].getOccupant());
+
+        Assert.assertTrue(pawn.hasMoved());
+    }
+
+    @Test
+    public void makeMove_GivenRegularPawnMoveForward1_UpdatesBoardState(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(1, 0, true);
+
+        boardSquares[6][0].setOccupant(pawn);
+
+        Move move = new RegularMove(pawn, 2, 0, false);
+
+        board.makeMove(move);
+
+        Assert.assertFalse(pawn.isEnPassantable());
+        Assert.assertEquals(boardSquares[5][0].getOccupant(), pawn);
+        Assert.assertNull(boardSquares[6][0].getOccupant());
+
+        Assert.assertTrue(pawn.hasMoved());
+    }
+
+    @Test
     public void makeMove_GivenRegularMoveAndCaptureAndWhite_UpdatesBoardState(){
         Square[][] boardSquares = board.getSquares();
 
@@ -327,6 +363,44 @@ public class BoardTest {
         Assert.assertFalse(board.getWhitePieces().contains(enemyPawn));
 
         Assert.assertTrue(pawn.hasMoved());
+    }
+
+    @Test
+    public void makeMove_GivenMoveAndWhite_SetsEnemyPawnsEnPassant(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(1, 0, true);
+        Pawn enemyPawn = new Pawn(6,0, false);
+
+        boardSquares[6][0].setOccupant(pawn);
+        boardSquares[1][0].setOccupant(enemyPawn);
+
+        board.getWhitePieces().add(pawn);
+        board.getBlackPieces().add(enemyPawn);
+
+        Move move = new RegularMove(pawn, 2, 0, false);
+
+        board.makeMove(move);
+
+        Assert.assertFalse(enemyPawn.isEnPassantable());
+    }
+
+    @Test
+    public void makeMove_GivenMoveAndBlack_SetsEnemyPawnsEnPassant(){
+        Square[][] boardSquares = board.getSquares();
+        Pawn pawn = new Pawn(1, 0, false);
+        Pawn enemyPawn = new Pawn(6,0, true);
+
+        boardSquares[6][0].setOccupant(pawn);
+        boardSquares[1][0].setOccupant(enemyPawn);
+
+        board.getWhitePieces().add(pawn);
+        board.getBlackPieces().add(enemyPawn);
+
+        Move move = new RegularMove(pawn, 2, 0, false);
+
+        board.makeMove(move);
+
+        Assert.assertFalse(enemyPawn.isEnPassantable());
     }
 
     @Test
