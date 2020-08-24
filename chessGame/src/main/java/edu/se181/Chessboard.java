@@ -1,5 +1,6 @@
 package edu.se181;
 
+import javafx.animation.RotateTransition;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
@@ -7,6 +8,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +33,7 @@ public class Chessboard {
     public CaptureBox whiteCaptured = new CaptureBox();
     public CaptureBox blackCaptured = new CaptureBox();
     private boolean whiteTurn = true;
+    private boolean white = false;
     private Game game = new Game();
 
     public Chessboard(){
@@ -162,7 +166,15 @@ public class Chessboard {
         }
         board.getChildren().addAll(blackPieces);
         board.getChildren().addAll(whitePieces);
-
+        if(!white){
+            board.setRotate(180);
+            for(Sprite s: whitePieces){
+                s.setRotate(180);
+            }
+            for(Sprite s: blackPieces){
+                s.setRotate(180);
+            }
+        }
     }
 
     public void addHandler(Sprite sprite, boolean forWhite) {
